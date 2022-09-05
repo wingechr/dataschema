@@ -1,0 +1,97 @@
+import logging  # noqa
+
+from sqlalchemy import ForeignKeyConstraint, create_mock_engine
+
+from utils.dot import Digraph, Edge, Node
+
+
+class Compiler:
+    def __init__(self, dialect_name="sqlite", init_data=None):
+        self.data = init_data or []
+        self.engine = create_mock_engine(dialect_name + "://", self)
+
+    def __call__(self, table, *args, **kwargs):
+        if args:
+            raise NotImplementedError(args)
+        if kwargs:
+            raise NotImplementedError(kwargs)
+        self.compile_table(table)
+
+    def compile_table(self, create_stmt):
+        raise NotImplementedError
+
+    def compile_tables(self, meta):
+        meta.create_all(self.engine)
+        return self
+
+    def __str__(self):
+        raise NotImplementedError
+
+
+class DDLCompiler(Compiler):
+    def __init__(self, dialect_name="sqlite3"):
+        super().__init__(dialect_name=dialect_name, init_data=[])
+
+    def compile_table(self, create_stmt):
+        self.data.append(create_stmt.compile(dialect=self.engine.dialect))
+
+    def __str__(self):
+        return "\n".join(str(x) for x in self.data)
+
+
+class DotCompiler(Compiler):
+    def __init__(self):
+        super().__init__(
+            init_data=Digraph(
+                graph_attrs={
+                    "rankdir": "RL",
+                    "ranksep": 3,
+                    # "splines": "line"
+                },
+                edge_attrs={
+                    "arrowhead": "vee",
+                },
+            )
+        )
+
+    def compile_table(self, create_stmt):
+        table = create_stmt.element
+        name = table.name
+        label = self.get_html_table_label(table)
+        table_node = self.data.append(Node(name, {"label": label, "shape": "box"}))
+
+        for const in table.constraints:
+            if isinstance(const, ForeignKeyConstraint):
+                # print(const.referred_table.name, [(c.column.name, c.column.index, c.parent.name) for c in const.elements])
+                self.data.append(Edge(table_node, const.referred_table.name))
+
+            #
+
+            #
+
+    @staticmethod
+    def get_html_table_label(table):
+        rows = [
+            f'<tr><td port="0" align="left"><b>{table.name}</b></td></tr>',
+            f"<hr/>",
+        ]
+        pk_cols = table.primary_key.columns
+        for i, col in enumerate(table.columns):
+
+            if col.nullable:
+                title = f"<i>{col.name}</i>"
+            else:
+                title = f"<b>{col.name}</b>"
+            if col.name in pk_cols:
+                title = f"<u>{title}</u>"
+
+            rows.append(
+                f'<tr><td port="{i}" align="left">{title}: {col.type}</td></tr>'
+            )
+        text = '<table border="0" cellspacing="5" cellpadding="0">%s</table>' % "".join(
+            rows
+        )
+        return text
+
+    def __str__(self):
+        return str(self.data)

@@ -1,0 +1,67 @@
+{
+  "fields": {
+    "c1": {
+      "name": "c1",
+      "type": "integer",
+      "nullable": false
+    },
+    "c2": {
+      "name": "c2",
+      "type": "integer",
+      "nullable": false,
+      "description": "sshd"
+    }
+  },
+  "resources": [
+    {
+      "name": "table 1",
+      "schema": {
+        "fields": [
+          {
+            "$ref": "#/fields/c1"
+          },
+          {
+            "$ref": "#/fields/c2"
+          }
+        ],
+        "primaryKey": {
+          "name": "PK1",
+          "fields": ["c1", "c2"]
+        }
+      }
+    },
+    {
+      "name": "table 2",
+      "schema": {
+        "fields": [
+          {
+            "$ref": "#/fields/c1"
+          },
+          {
+            "$ref": "#/fields/c2"
+          },
+          {
+            "name": "c3",
+            "type": "varchar(64)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "FK1",
+            "fields": ["c1", "c2"],
+            "reference": {
+              "resource": "table 1",
+              "fields": ["c2", "c1"]
+            }
+          }
+        ],
+        "uniqueKeys": [
+          {
+            "name": "UQ1",
+            "fields": ["c1", "c2", "c3"]
+          }
+        ]
+      }
+    }
+  ]
+}
