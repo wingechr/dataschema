@@ -1,64 +1,396 @@
 {
-  "fields": {
-    "c1": {
-      "name": "c1",
-      "type": "integer",
-      "nullable": false
+  "columns": {
+    "id": {
+      "name": "id",
+      "description": "unique id",
+      "type": "bigint"
     },
-    "c2": {
-      "name": "c2",
-      "type": "integer",
-      "nullable": false,
-      "description": "sshd"
+    "scenario": {
+      "name": "scenario",
+      "description": "Abbreviation of the scenario",
+      "type": "char(3)"
+    },
+    "unit": {
+      "name": "unit",
+      "description": "Name of unit",
+      "type": "varchar(128)"
+    },
+    "notation": {
+      "name": "notation",
+      "description": "notation key (= abbreviation)",
+      "type": "varchar(64)"
+    },
+    "gas": {
+      "name": "gas",
+      "description": "Name / Abbreviation of gas",
+      "type": "varchar(64)"
+    },
+    "country_code": {
+      "name": "country_code",
+      "description": "Code used to abbreviate country name",
+      "type": "varchar(8)"
+    },
+    "category": {
+      "name": "category",
+      "description": "the sector name including the CRF code",
+      "type": "varchar(128)"
+    },
+    "parameter": {
+      "name": "parameter",
+      "description": "Parameter name",
+      "type": "varchar(128)"
+    },
+    "default_unit": {
+      "name": "default_unit",
+      "description": "Unit in which the data should be reported",
+      "type": "varchar(128)"
+    },
+    "year": {
+      "name": "year",
+      "description": "year for which projected data is reported",
+      "type": "smallint"
+    },
+    "is_ry": {
+      "name": "is_ry",
+      "description": "information on whether this is the reference year",
+      "type": "boolean"
+    },
+    "value": {
+      "name": "value",
+      "description": "value reported",
+      "type": "float"
+    }
+  },
+  "foreignKeys": {
+    "scenario": {
+      "fields": "scenario",
+      "reference": {
+        "resource": "scenario"
+      }
+    },
+    "unit": {
+      "fields": "unit",
+      "reference": {
+        "resource": "unit"
+      }
+    },
+    "notation": {
+      "fields": "notation",
+      "reference": {
+        "resource": "notation"
+      }
+    },
+    "gas": {
+      "fields": "gas",
+      "reference": {
+        "resource": "gas"
+      }
+    },
+    "country_code": {
+      "fields": "country_code",
+      "reference": {
+        "resource": "country"
+      }
+    },
+    "category": {
+      "fields": "category",
+      "reference": {
+        "resource": "category"
+      }
+    },
+    "parameter": {
+      "fields": "parameter",
+      "reference": {
+        "resource": "parameter"
+      }
     }
   },
   "resources": [
     {
-      "name": "table 1",
+      "name": "scenario",
       "schema": {
+        "primaryKey": "id",
+        "uniqueKeys": ["scenario"],
         "fields": [
           {
-            "$ref": "#/fields/c1"
+            "$ref": "#/columns/id"
           },
           {
-            "$ref": "#/fields/c2"
+            "$ref": "#/columns/scenario"
+          },
+          {
+            "name": "scenario_name",
+            "description": "Full name of the scenario",
+            "type": "varchar(128)"
           }
-        ],
-        "primaryKey": {
-          "name": "PK1",
-          "fields": ["c1", "c2"]
-        }
+        ]
       }
     },
     {
-      "name": "table 2",
+      "name": "unit",
       "schema": {
+        "primaryKey": "id",
+        "uniqueKeys": ["unit"],
         "fields": [
           {
-            "$ref": "#/fields/c1"
+            "$ref": "#/columns/id"
           },
           {
-            "$ref": "#/fields/c2"
-          },
-          {
-            "name": "c3",
-            "type": "varchar(64)"
+            "$ref": "#/columns/unit"
           }
-        ],
+        ]
+      }
+    },
+    {
+      "name": "parameter",
+      "schema": {
+        "primaryKey": "id",
+        "uniqueKeys": ["parameter"],
         "foreignKeys": [
           {
-            "name": "FK1",
-            "fields": ["c1", "c2"],
+            "fields": "default_unit",
             "reference": {
-              "resource": "table 1",
-              "fields": ["c2", "c1"]
+              "resource": "unit",
+              "fields": "unit"
             }
           }
         ],
-        "uniqueKeys": [
+        "fields": [
           {
-            "name": "UQ1",
-            "fields": ["c1", "c2", "c3"]
+            "$ref": "#/columns/id"
+          },
+          {
+            "$ref": "#/columns/parameter"
+          },
+          {
+            "$ref": "#/columns/default_unit"
+          }
+        ]
+      }
+    },
+    {
+      "name": "notation",
+      "schema": {
+        "primaryKey": "id",
+        "uniqueKeys": ["notation"],
+        "fields": [
+          {
+            "$ref": "#/columns/id"
+          },
+          {
+            "$ref": "#/columns/notation"
+          },
+          {
+            "name": "notation_name",
+            "description": "explanation of notation key",
+            "type": "varchar(128)"
+          }
+        ]
+      }
+    },
+    {
+      "name": "gas",
+      "schema": {
+        "primaryKey": "id",
+        "uniqueKeys": ["gas"],
+        "fields": [
+          {
+            "$ref": "#/columns/id"
+          },
+          {
+            "$ref": "#/columns/gas"
+          }
+        ]
+      }
+    },
+    {
+      "name": "category",
+      "schema": {
+        "primaryKey": "id",
+        "uniqueKeys": ["category"],
+        "fields": [
+          {
+            "$ref": "#/columns/id"
+          },
+          {
+            "$ref": "#/columns/category"
+          },
+          {
+            "name": "category_code",
+            "description": "the CRF sector code  (CRF = common reporting format)",
+            "type": "varchar(128)"
+          },
+          {
+            "name": "category_lulucf",
+            "description": "the LULUCF accounting category ",
+            "type": "varchar(32)"
+          },
+          {
+            "name": "category_parent",
+            "description": "the parent sector",
+            "type": "varchar(128)"
+          },
+          {
+            "name": "crf_code",
+            "description": "the CRF code (CRF = common reporting format)",
+            "type": "varchar(128)"
+          },
+          {
+            "name": "is_user_defined",
+            "description": "indicates with true, if the sector was defined by a user and is not included by default in legislation",
+            "type": "boolean"
+          }
+        ]
+      }
+    },
+    {
+      "name": "country",
+      "schema": {
+        "primaryKey": "id",
+        "uniqueKeys": ["country_code"],
+        "fields": [
+          {
+            "$ref": "#/columns/id"
+          },
+          {
+            "$ref": "#/columns/country_code"
+          },
+          {
+            "name": "country_name",
+            "description": "Full country name in english",
+            "type": "varchar(128)"
+          }
+        ]
+      }
+    },
+    {
+      "name": "table_1",
+      "schema": {
+        "primaryKey": null,
+        "foreignKeys": [
+          {
+            "$ref": "#/foreignKeys/country_code"
+          },
+          {
+            "$ref": "#/foreignKeys/category"
+          },
+          {
+            "$ref": "#/foreignKeys/gas"
+          },
+          {
+            "$ref": "#/foreignKeys/scenario"
+          },
+          {
+            "$ref": "#/foreignKeys/unit"
+          },
+          {
+            "$ref": "#/foreignKeys/notation"
+          }
+        ],
+        "fields": [
+          {
+            "$ref": "#/columns/id"
+          },
+          {
+            "$ref": "#/columns/country_code"
+          },
+          {
+            "$ref": "#/columns/category"
+          },
+          {
+            "$ref": "#/columns/year"
+          },
+          {
+            "$ref": "#/columns/gas"
+          },
+          {
+            "$ref": "#/columns/scenario"
+          },
+          {
+            "$ref": "#/columns/unit"
+          },
+          {
+            "$ref": "#/columns/is_ry"
+          },
+          {
+            "name": "subtable",
+            "description": "indicates which subtable this is",
+            "type": "char(1)"
+          },
+          {
+            "$ref": "#/columns/notation"
+          },
+          {
+            "$ref": "#/columns/value"
+          }
+        ]
+      }
+    },
+    {
+      "name": "table_3",
+      "schema": {
+        "primaryKey": "id",
+        "foreignKeys": [
+          {
+            "$ref": "#/foreignKeys/country_code"
+          },
+          {
+            "$ref": "#/foreignKeys/scenario"
+          },
+          {
+            "$ref": "#/foreignKeys/parameter"
+          },
+          {
+            "$ref": "#/foreignKeys/notation"
+          }
+        ],
+        "fields": [
+          {
+            "$ref": "#/columns/id"
+          },
+          {
+            "$ref": "#/columns/country_code"
+          },
+          {
+            "$ref": "#/columns/parameter"
+          },
+          {
+            "$ref": "#/columns/scenario"
+          },
+          {
+            "$ref": "#/columns/year"
+          },
+          {
+            "$ref": "#/columns/default_unit"
+          },
+          {
+            "name": "additional_unit",
+            "description": "the unit in which the data is reported",
+            "type": "varchar(8)"
+          },
+          {
+            "$ref": "#/columns/notation"
+          },
+          {
+            "$ref": "#/columns/value"
+          },
+          {
+            "name": "data_source",
+            "description": "information on the original data source provided",
+            "type": "varchar(1024)"
+          },
+          {
+            "name": "comment",
+            "description": "any comment provided",
+            "type": "varchar(512)"
+          },
+          {
+            "name": "is_part_of_projections",
+            "description": "information whether parameter was used for projections",
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/columns/is_ry"
           }
         ]
       }

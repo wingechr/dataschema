@@ -1,4 +1,3 @@
-import json
 import logging  # noqa
 import re
 
@@ -10,76 +9,95 @@ from sqlalchemy import (
     PrimaryKeyConstraint,
     Table,
     UniqueConstraint,
+    create_engine,
+    dialects,
     types,
 )
 
 
-def parse_type(type_str):
+def get_type_cls(name, dialect=None):
+    # special cases
+    if dialect and dialect.name == "mssql" and name == "BOOLEAN":
+        return dialects.mssql.BIT
+    return getattr(types, name)
+
+
+def parse_type(type_str, dialect=None):
     type_str = type_str.upper().replace(" ", "")
     m = re.match(r"^([A-Z0-9]+)(|\(.*\))$", type_str)
     name, args = m.groups()
     args = [int(x) for x in args.replace("(", "").replace(")", "").split(",") if x]
-    cls = getattr(types, name)
+    cls = get_type_cls(name, dialect=dialect)
     inst = cls(*args)
     return inst
 
 
-def pop_opt(data, name, default=None):
-    return data.pop(name) if name in data else default
+def get_attr(data, name, default=None):
+    if not isinstance(data, dict):
+        return default
+    return data.get(name, default)
 
 
-def get_column(data):
-    data = data.copy()
-    name = data.pop("name")
-    description = pop_opt(data, "description")
-    coltype = parse_type(data.pop("type"))
-    col = Column(name, coltype, comment=description, **data)
+def get_column(data, dialect=None):
+    name = data["name"]
+    description = get_attr(data, "description")
+    nullable = get_attr(data, "nullable", False)
+    coltype = parse_type(data["type"], dialect=dialect)
+    data = {}  # todo: allowed args?
+    col = Column(name, coltype, comment=description, nullable=nullable, **data)
     return col
 
 
+def make_field_list(data, default=None):
+    if isinstance(data, str):  # one field
+        return [data]
+    elif isinstance(data, list):  # multiple fields as string
+        return data
+    else:
+        return make_field_list(data.get("fields", default))
+
+
 def get_pk(data):
-    data = data.copy()
-    name = pop_opt(data, "name")
-    fields = data.pop("fields")
-    return PrimaryKeyConstraint(*fields, name=name, **data)
+    name = get_attr(data, "name")
+    fields = make_field_list(data)
+    return PrimaryKeyConstraint(*fields, name=name)
 
 
 def get_uq(data):
-    data = data.copy()
-    name = pop_opt(data, "name")
-    fields = data.pop("fields")
+    name = get_attr(data, "name")
+    fields = make_field_list(data)
     return UniqueConstraint(*fields, name=name)
 
 
 def get_fk(data, meta):
-    data = data.copy()
-    name = pop_opt(data, "name")
-    fields = data.pop("fields")
-    reference = data.pop("reference")
+    name = get_attr(data, "name")
+    fields = make_field_list(data)
+    reference = data["reference"]
     ref_tab = meta.tables[reference["resource"]]
-    refcolumns = [ref_tab.c[c] for c in reference["fields"]]
-    return ForeignKeyConstraint(fields, refcolumns=refcolumns, name=name, **data)
+    refcolumns = [ref_tab.c[c] for c in make_field_list(reference, default=fields)]
+    return ForeignKeyConstraint(fields, refcolumns=refcolumns, name=name)
 
 
 def get_tab(data, meta):
-    data = data.copy()
-    name = data.pop("name")
-    description = pop_opt(data, "description")
-    table_schema = data.pop("schema")
-    columns = [get_column(c) for c in table_schema["fields"]]
+    dialect = meta.bind.dialect
+    name = data["name"]
+    description = get_attr(data, "description")
+    table_schema = data["schema"]
+    columns = [get_column(c, dialect=dialect) for c in table_schema["fields"]]
     constraints = []
-    if "primaryKey" in table_schema:
+    if table_schema.get("primaryKey"):
         constraints.append(get_pk(table_schema["primaryKey"]))
     for d in table_schema.get("uniqueKeys", []):
         constraints.append(get_uq(d))
     for d in table_schema.get("foreignKeys", []):
         constraints.append(get_fk(d, meta))
-    tab = Table(name, meta, *columns, *constraints, comment=description, **data)
+    tab = Table(name, meta, *columns, *constraints, comment=description)
     return tab
 
 
-def get_meta(table_data):
-    meta = MetaData()
+def get_meta(table_data, url):
+    eng = create_engine(url)
+    meta = MetaData(eng)
     with open(table_data, encoding="utf-8") as file:
         data = jsonref.load(file)
     resources = data["resources"]
