@@ -1,6 +1,3 @@
-__version__ = "0.0.0"
-
-
 import logging
 
 from utils.compiler import DDLCompiler, DotCompiler
