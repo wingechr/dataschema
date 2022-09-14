@@ -105,7 +105,6 @@ def get_meta(table_data, url):
 
     def loader(rel_path):
         path = os.path.join(base_dir, rel_path)
-        logging.error(path)
         with open(path, encoding="utf-8") as file:
             return json.load(file)
 

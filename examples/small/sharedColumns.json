@@ -1,0 +1,22 @@
+{
+  "id": {
+    "name": "id",
+    "description": "unique id",
+    "type": "bigint"
+  },
+  "year": {
+    "name": "year",
+    "description": "year for which projected data is reported",
+    "type": "smallint"
+  },
+  "country_code": {
+    "name": "country_code",
+    "description": "Code used to abbreviate country name",
+    "type": "varchar(8)"
+  },
+  "value": {
+    "name": "value",
+    "description": "value reported",
+    "type": "float"
+  }
+}

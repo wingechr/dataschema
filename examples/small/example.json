@@ -1,0 +1,55 @@
+{
+  "columns": {
+    "$ref": "sharedColumns.json"
+  },
+  "resources": [
+    {
+      "name": "country",
+      "schema": {
+        "primaryKey": "id",
+        "uniqueKeys": ["country_code"],
+        "fields": [
+          {
+            "$ref": "#/columns/id"
+          },
+          {
+            "$ref": "#/columns/country_code"
+          },
+          {
+            "name": "country_name",
+            "description": "Full country name in english",
+            "type": "varchar(128)"
+          }
+        ]
+      }
+    },
+    {
+      "name": "table_1",
+      "schema": {
+        "primaryKey": "id",
+        "foreignKeys": [
+          {
+            "fields": "country_code",
+            "reference": {
+              "resource": "country"
+            }
+          }
+        ],
+        "fields": [
+          {
+            "$ref": "#/columns/id"
+          },
+          {
+            "$ref": "#/columns/country_code"
+          },
+          {
+            "$ref": "#/columns/year"
+          },
+          {
+            "$ref": "#/columns/value"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+click
 sqlalchemy>=1.4
 jsonref
 # graphviz binary
