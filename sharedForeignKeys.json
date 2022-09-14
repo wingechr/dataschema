@@ -1,0 +1,44 @@
+{
+  "scenario": {
+    "fields": "scenario",
+    "reference": {
+      "resource": "scenario"
+    }
+  },
+  "unit": {
+    "fields": "unit",
+    "reference": {
+      "resource": "unit"
+    }
+  },
+  "notation": {
+    "fields": "notation",
+    "reference": {
+      "resource": "notation"
+    }
+  },
+  "gas": {
+    "fields": "gas",
+    "reference": {
+      "resource": "gas"
+    }
+  },
+  "country_code": {
+    "fields": "country_code",
+    "reference": {
+      "resource": "country"
+    }
+  },
+  "category": {
+    "fields": "category",
+    "reference": {
+      "resource": "category"
+    }
+  },
+  "parameter": {
+    "fields": "parameter",
+    "reference": {
+      "resource": "parameter"
+    }
+  }
+}

@@ -1,4 +1,6 @@
+import json
 import logging  # noqa
+import os
 import re
 
 import jsonref
@@ -98,8 +100,18 @@ def get_tab(data, meta):
 def get_meta(table_data, url):
     eng = create_engine(url)
     meta = MetaData(eng)
+
+    base_dir = os.path.dirname(table_data)
+
+    def loader(rel_path):
+        path = os.path.join(base_dir, rel_path)
+        logging.error(path)
+        with open(path, encoding="utf-8") as file:
+            return json.load(file)
+
     with open(table_data, encoding="utf-8") as file:
-        data = jsonref.load(file)
+        data = jsonref.load(file, loader=loader)
+
     resources = data["resources"]
     for res in resources:
         get_tab(res, meta)
