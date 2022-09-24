@@ -4,7 +4,7 @@
 
 `sharedColumns.json`: shared column definitions as json schema
 
-```
+```json
 {
   "id": {
     "name": "id",
@@ -31,7 +31,7 @@
 
 `example.json`: table definitions as json schema
 
-```
+```json
 {
   "columns": {
     "$ref": "sharedColumns.json"
@@ -41,9 +41,7 @@
       "name": "country",
       "schema": {
         "primaryKey": "id",
-        "uniqueKeys": [
-          "country_code"
-        ],
+        "uniqueKeys": ["country_code"],
         "fields": [
           {
             "$ref": "#/columns/id"
@@ -92,7 +90,8 @@
 ```
 
 ```bash
-python dataschema.py example.json --sql-dialect mssql
+python dataschema.py --sql-dialect mssql example.json example.sql
+python dataschema.py example.json example.png
 ```
 
 creates a class diagram (`example.png`)

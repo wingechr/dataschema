@@ -97,22 +97,26 @@ def get_tab(data, meta):
     return tab
 
 
-def get_meta(table_data, url):
+def get_meta(schema_json_data, url):
     eng = create_engine(url)
     meta = MetaData(eng)
+    resources = schema_json_data["resources"]
+    for res in resources:
+        get_tab(res, meta)
 
-    base_dir = os.path.dirname(table_data)
+    return meta
+
+
+def get_json_data(schema_json):
+
+    base_dir = os.path.dirname(schema_json)
 
     def loader(rel_path):
         path = os.path.join(base_dir, rel_path)
         with open(path, encoding="utf-8") as file:
             return json.load(file)
 
-    with open(table_data, encoding="utf-8") as file:
+    with open(schema_json, encoding="utf-8") as file:
         data = jsonref.load(file, loader=loader)
 
-    resources = data["resources"]
-    for res in resources:
-        get_tab(res, meta)
-
-    return meta
+    return data

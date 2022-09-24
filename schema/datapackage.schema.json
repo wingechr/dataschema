@@ -1,0 +1,469 @@
+{
+  "description": "Data Package",
+  "properties": {
+    "contributors": {
+      "description": "The contributors to this descriptor.",
+      "examples": [
+        [
+          {
+            "title": "Joe Bloggs"
+          }
+        ],
+        [
+          {
+            "email": "joe@example.com",
+            "role": "author",
+            "title": "Joe Bloggs"
+          }
+        ]
+      ],
+      "items": {
+        "context": "Use of this property does not imply that the person was the original creator of, or a contributor to, the data in the descriptor, but refers to the composition of the descriptor itself.",
+        "description": "A contributor to this descriptor.",
+        "properties": {
+          "email": {
+            "description": "An email address.",
+            "examples": ["example@example.com"],
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "organization": {
+            "description": "An organizational affiliation for this contributor.",
+            "title": "Organization",
+            "type": "string"
+          },
+          "path": {
+            "context": "Implementations need to negotiate the type of path provided, and dereference the data accordingly.",
+            "description": "A fully qualified URL, or a POSIX file path.",
+            "examples": ["file.csv", "http://example.com/file.csv"],
+            "pattern": "^(?=^[^./~])(^((?!\\.{2}).)*$).*$",
+            "title": "Path",
+            "type": "string"
+          },
+          "role": {
+            "default": "contributor",
+            "enum": [
+              "publisher",
+              "author",
+              "maintainer",
+              "wrangler",
+              "contributor"
+            ],
+            "type": "string"
+          },
+          "title": {
+            "description": "A human-readable title.",
+            "examples": ["My Package Title"],
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": ["title"],
+        "title": "Contributor"
+      },
+      "minItems": 1,
+      "title": "Contributors",
+      "type": "array"
+    },
+    "created": {
+      "context": "The datetime must conform to the string formats for datetime as described in [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6)",
+      "description": "The datetime on which this descriptor was created.",
+      "examples": ["1985-04-12T23:20:50.52Z"],
+      "format": "date-time",
+      "title": "Created",
+      "type": "string"
+    },
+    "description": {
+      "description": "A text description. Markdown is encouraged.",
+      "examples": ["# My Package description\nAll about my package."],
+      "title": "Description",
+      "type": "string"
+    },
+    "homepage": {
+      "description": "The home on the web that is related to this data package.",
+      "examples": ["http://example.com/"],
+      "format": "uri",
+      "title": "Home Page",
+      "type": "string"
+    },
+    "id": {
+      "context": "A common usage pattern for Data Packages is as a packaging format within the bounds of a system or platform. In these cases, a unique identifier for a package is desired for common data handling workflows, such as updating an existing package. While at the level of the specification, global uniqueness cannot be validated, consumers using the `id` property `MUST` ensure identifiers are globally unique.",
+      "description": "A property reserved for globally unique identifiers. Examples of identifiers that are unique include UUIDs and DOIs.",
+      "examples": [
+        "b03ec84-77fd-4270-813b-0c698943f7ce",
+        "http://dx.doi.org/10.1594/PANGAEA.726855"
+      ],
+      "title": "ID",
+      "type": "string"
+    },
+    "image": {
+      "description": "A image to represent this package.",
+      "examples": ["http://example.com/image.jpg", "relative/to/image.jpg"],
+      "title": "Image",
+      "type": "string"
+    },
+    "keywords": {
+      "description": "A list of keywords that describe this package.",
+      "examples": [["data", "fiscal", "transparency"]],
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Keywords",
+      "type": "array"
+    },
+    "licenses": {
+      "context": "This property is not legally binding and does not guarantee that the package is licensed under the terms defined herein.",
+      "description": "The license(s) under which this package is published.",
+      "examples": [
+        [
+          {
+            "name": "odc-pddl-1.0",
+            "path": "http://opendatacommons.org/licenses/pddl/",
+            "title": "Open Data Commons Public Domain Dedication and License v1.0"
+          }
+        ]
+      ],
+      "items": {
+        "context": "Use of this property does not imply that the person was the original creator of, or a contributor to, the data in the descriptor, but refers to the composition of the descriptor itself.",
+        "description": "A license for this descriptor.",
+        "properties": {
+          "name": {
+            "description": "MUST be an Open Definition license identifier, see http://licenses.opendefinition.org/",
+            "pattern": "^([-a-zA-Z0-9._])+$",
+            "title": "Open Definition license identifier",
+            "type": "string"
+          },
+          "path": {
+            "context": "Implementations need to negotiate the type of path provided, and dereference the data accordingly.",
+            "description": "A fully qualified URL, or a POSIX file path.",
+            "examples": ["file.csv", "http://example.com/file.csv"],
+            "pattern": "^(?=^[^./~])(^((?!\\.{2}).)*$).*$",
+            "title": "Path",
+            "type": "string"
+          },
+          "title": {
+            "description": "A human-readable title.",
+            "examples": ["My Package Title"],
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "title": "License",
+        "type": "object"
+      },
+      "minItems": 1,
+      "title": "Licenses",
+      "type": "array"
+    },
+    "name": {
+      "context": "This is ideally a url-usable and human-readable name. Name `SHOULD` be invariant, meaning it `SHOULD NOT` change when its parent descriptor is updated.",
+      "description": "An identifier string. Lower case characters with `.`, `_`, `-` and `/` are allowed.",
+      "examples": ["my-nice-name"],
+      "pattern": "^([-a-z0-9._/])+$",
+      "title": "Name",
+      "type": "string"
+    },
+    "profile": {
+      "context": "Every Package and Resource descriptor has a profile. The default profile, if none is declared, is `data-package` for Package and `data-resource` for Resource.",
+      "description": "The profile of this descriptor.",
+      "examples": [
+        "tabular-data-package",
+        "http://example.com/my-profiles-json-schema.json"
+      ],
+      "title": "Profile",
+      "type": "string"
+    },
+    "resources": {
+      "description": "An `array` of Data Resource objects, each compliant with the [Data Resource](/data-resource/) specification.",
+      "examples": [
+        [
+          {
+            "data": [[0, 1, 2]],
+            "name": "my-data"
+          },
+          {
+            "path": "./data.csv",
+            "name": "my-data"
+          }
+        ]
+      ],
+      "items": {
+        "description": "Data Resource.",
+        "oneOf": [
+          {
+            "required": ["name", "data"]
+          },
+          {
+            "required": ["name", "path"]
+          }
+        ],
+        "properties": {
+          "bytes": {
+            "description": "The size of this resource in bytes.",
+            "examples": [2082],
+            "title": "Bytes",
+            "type": "integer"
+          },
+          "data": {
+            "description": "Inline data for this resource.",
+            "title": "Data"
+          },
+          "description": {
+            "description": "A text description. Markdown is encouraged.",
+            "examples": ["# My Package description\nAll about my package."],
+            "title": "Description",
+            "type": "string"
+          },
+          "encoding": {
+            "default": "utf-8",
+            "description": "The file encoding of this resource.",
+            "examples": ["utf-8"],
+            "title": "Encoding",
+            "type": "string"
+          },
+          "format": {
+            "context": "`csv`, `xls`, `json` are examples of common formats.",
+            "description": "The file format of this resource.",
+            "examples": ["xls"],
+            "title": "Format",
+            "type": "string"
+          },
+          "hash": {
+            "description": "The MD5 hash of this resource. Indicate other hashing algorithms with the {algorithm}:{hash} format.",
+            "examples": [
+              "d25c9c77f588f5dc32059d2da1136c02",
+              "SHA256:5262f12512590031bbcc9a430452bfd75c2791ad6771320bb4b5728bfb78c4d0"
+            ],
+            "pattern": "^([^:]+:[a-fA-F0-9]+|[a-fA-F0-9]{32}|)$",
+            "title": "Hash",
+            "type": "string"
+          },
+          "homepage": {
+            "description": "The home on the web that is related to this data package.",
+            "examples": ["http://example.com/"],
+            "format": "uri",
+            "title": "Home Page",
+            "type": "string"
+          },
+          "licenses": {
+            "context": "This property is not legally binding and does not guarantee that the package is licensed under the terms defined herein.",
+            "description": "The license(s) under which this package is published.",
+            "examples": [
+              [
+                {
+                  "name": "odc-pddl-1.0",
+                  "path": "http://opendatacommons.org/licenses/pddl/",
+                  "title": "Open Data Commons Public Domain Dedication and License v1.0"
+                }
+              ]
+            ],
+            "items": {
+              "context": "Use of this property does not imply that the person was the original creator of, or a contributor to, the data in the descriptor, but refers to the composition of the descriptor itself.",
+              "description": "A license for this descriptor.",
+              "properties": {
+                "name": {
+                  "description": "MUST be an Open Definition license identifier, see http://licenses.opendefinition.org/",
+                  "pattern": "^([-a-zA-Z0-9._])+$",
+                  "title": "Open Definition license identifier",
+                  "type": "string"
+                },
+                "path": {
+                  "context": "Implementations need to negotiate the type of path provided, and dereference the data accordingly.",
+                  "description": "A fully qualified URL, or a POSIX file path.",
+                  "examples": ["file.csv", "http://example.com/file.csv"],
+                  "pattern": "^(?=^[^./~])(^((?!\\.{2}).)*$).*$",
+                  "title": "Path",
+                  "type": "string"
+                },
+                "title": {
+                  "description": "A human-readable title.",
+                  "examples": ["My Package Title"],
+                  "title": "Title",
+                  "type": "string"
+                }
+              },
+              "title": "License",
+              "type": "object"
+            },
+            "minItems": 1,
+            "title": "Licenses",
+            "type": "array"
+          },
+          "mediatype": {
+            "description": "The media type of this resource. Can be any valid media type listed with [IANA](https://www.iana.org/assignments/media-types/media-types.xhtml).",
+            "examples": ["text/csv"],
+            "pattern": "^(.+)/(.+)$",
+            "title": "Media Type",
+            "type": "string"
+          },
+          "name": {
+            "context": "This is ideally a url-usable and human-readable name. Name `SHOULD` be invariant, meaning it `SHOULD NOT` change when its parent descriptor is updated.",
+            "description": "An identifier string. Lower case characters with `.`, `_`, `-` and `/` are allowed.",
+            "examples": ["my-nice-name"],
+            "pattern": "^([-a-z0-9._/])+$",
+            "title": "Name",
+            "type": "string"
+          },
+          "path": {
+            "context": "The dereferenced value of each referenced data source in `path` `MUST` be commensurate with a native, dereferenced representation of the data the resource describes. For example, in a *Tabular* Data Resource, this means that the dereferenced value of `path` `MUST` be an array.",
+            "description": "A reference to the data for this resource, as either a path as a string, or an array of paths as strings. of valid URIs.",
+            "examples": [
+              "file.csv",
+              "file2.csv",
+              "http://example.com/file.csv",
+              "http://example.com/file2.csv",
+              "http://example.com/file.csv"
+            ],
+            "oneOf": [
+              {
+                "context": "Implementations need to negotiate the type of path provided, and dereference the data accordingly.",
+                "description": "A fully qualified URL, or a POSIX file path.",
+                "examples": ["file.csv", "http://example.com/file.csv"],
+                "pattern": "^(?=^[^./~])(^((?!\\.{2}).)*$).*$",
+                "title": "Path",
+                "type": "string"
+              },
+              {
+                "examples": [["file.csv"], ["http://example.com/file.csv"]],
+                "items": {
+                  "context": "Implementations need to negotiate the type of path provided, and dereference the data accordingly.",
+                  "description": "A fully qualified URL, or a POSIX file path.",
+                  "examples": ["file.csv", "http://example.com/file.csv"],
+                  "pattern": "^(?=^[^./~])(^((?!\\.{2}).)*$).*$",
+                  "title": "Path",
+                  "type": "string"
+                },
+                "minItems": 1,
+                "type": "array"
+              }
+            ],
+            "title": "Path"
+          },
+          "profile": {
+            "context": "Every Package and Resource descriptor has a profile. The default profile, if none is declared, is `data-package` for Package and `data-resource` for Resource.",
+            "description": "The profile of this descriptor.",
+            "examples": [
+              "tabular-data-package",
+              "http://example.com/my-profiles-json-schema.json"
+            ],
+            "title": "Profile",
+            "type": "string"
+          },
+          "schema": {
+            "description": "A schema for this resource.",
+            "title": "Schema",
+            "type": ["string", "object"]
+          },
+          "sources": {
+            "description": "The raw sources for this resource.",
+            "examples": [
+              [
+                {
+                  "path": "http://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+                  "title": "World Bank and OECD"
+                }
+              ]
+            ],
+            "items": {
+              "description": "A source file.",
+              "properties": {
+                "email": {
+                  "description": "An email address.",
+                  "examples": ["example@example.com"],
+                  "format": "email",
+                  "title": "Email",
+                  "type": "string"
+                },
+                "path": {
+                  "context": "Implementations need to negotiate the type of path provided, and dereference the data accordingly.",
+                  "description": "A fully qualified URL, or a POSIX file path.",
+                  "examples": ["file.csv", "http://example.com/file.csv"],
+                  "pattern": "^(?=^[^./~])(^((?!\\.{2}).)*$).*$",
+                  "title": "Path",
+                  "type": "string"
+                },
+                "title": {
+                  "description": "A human-readable title.",
+                  "examples": ["My Package Title"],
+                  "title": "Title",
+                  "type": "string"
+                }
+              },
+              "required": ["title"],
+              "title": "Source",
+              "type": "object"
+            },
+            "minItems": 0,
+            "title": "Sources",
+            "type": "array"
+          },
+          "title": {
+            "description": "A human-readable title.",
+            "examples": ["My Package Title"],
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "title": "Data Resource",
+        "type": "object"
+      },
+      "minItems": 1,
+      "title": "Data Resources",
+      "type": "array"
+    },
+    "sources": {
+      "description": "The raw sources for this resource.",
+      "examples": [
+        [
+          {
+            "path": "http://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+            "title": "World Bank and OECD"
+          }
+        ]
+      ],
+      "items": {
+        "description": "A source file.",
+        "properties": {
+          "email": {
+            "description": "An email address.",
+            "examples": ["example@example.com"],
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "path": {
+            "context": "Implementations need to negotiate the type of path provided, and dereference the data accordingly.",
+            "description": "A fully qualified URL, or a POSIX file path.",
+            "examples": ["file.csv", "http://example.com/file.csv"],
+            "pattern": "^(?=^[^./~])(^((?!\\.{2}).)*$).*$",
+            "title": "Path",
+            "type": "string"
+          },
+          "title": {
+            "description": "A human-readable title.",
+            "examples": ["My Package Title"],
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": ["title"],
+        "title": "Source",
+        "type": "object"
+      },
+      "minItems": 0,
+      "title": "Sources",
+      "type": "array"
+    },
+    "title": {
+      "description": "A human-readable title.",
+      "examples": ["My Package Title"],
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": ["resources"],
+  "title": "Data Package",
+  "type": "object"
+}
