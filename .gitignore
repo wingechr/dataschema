@@ -34,3 +34,6 @@ build
 dist
 example
 public
+
+# cache
+.parcel-cache

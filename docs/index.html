@@ -2,25 +2,20 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="vendor/bootstrap.min.css">
-<link rel="stylesheet" href="main.css">
+<link rel="stylesheet" href="main.scss">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
 <title></title>
 </head>
 <body>
     <main class="container">
-    <form id="metaedit-form">
+
+        <i class="fa-solid fa-user"></i>
+        <form id="metaedit-form">
+            <input class="typeahead" type="text" placeholder="States of USA">
         <!-- placeholder -->
     </form>
     <input id="file-upload" type="file" hidden>
-
-
-
-
     </main>
-    <script src="vendor/jquery.min.js"></script>
-    <script src="vendor/bootstrap.min.js"></script>
-    <script src="vendor/typeahead.min.js"></script>
-    <script src="vendor/jsoneditor.min.js"></script>
-    <script src="main.js"></script>
+    <script src="main.js" type="module"></script>
 </body>
 </html>

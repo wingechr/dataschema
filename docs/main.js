@@ -1,37 +1,18 @@
-let form = document.getElementById("metaedit-form");
+const $ = require("jquery");
+const JSONEditor = require("@json-editor/json-editor").JSONEditor;
+import "bootstrap";
+import "corejs-typeahead/dist/typeahead.jquery.js";
 
+
+let form = document.getElementById("metaedit-form");
+let defaultSchemaUrl = "https://json-schema.org/learn/examples/address.schema.json";
 /* parse query args */
 
 const _queryParams = new URLSearchParams(window.location.search);
 const queryParams = Object.fromEntries(_queryParams.entries());
-console.log(queryParams);
+let schema_url = queryParams.schema || defaultSchemaUrl;
+console.log(schema_url);
 
-let schema_url = queryParams.schema;
-
-
-/*
-
-var zipEngine = new Bloodhound({
-  datumTokenizer: Bloodhound.tokenizers.obj.whitespace("navn"),
-  queryTokenizer: Bloodhound.tokenizers.whitespace,
-  remote: {
-    url: "https://dawa.aws.dk/postnumre/%QUERY",
-    wildcard: "%QUERY",
-    cache: true
-  }
-});
-zipEngine.clearPrefetchCache();
-zipEngine.clearRemoteCache();
-zipEngine.initialize();
-*/
-
-/*
-var nameEngine = new Bloodhound({
-  local: ['dog', 'pig', 'moose'],
-  queryTokenizer: Bloodhound.tokenizers.whitespace,
-  datumTokenizer: Bloodhound.tokenizers.whitespace
-});
-*/
 
 let options = {
   schema: {"$ref": schema_url},
@@ -49,11 +30,13 @@ let options = {
   theme: 'bootstrap4',
   show_errors: 'always', /* interaction, change, always, never*/
 };
-let editor = new JSONEditor(form, options);
-
+const editor = new JSONEditor(form, options);
 
 editor.on('ready', function() {
-  /* download button */
+
+}
+/*
+editor.on('ready', function() {
 
 
   let btnDownload = editor.root.getButton('Download', 'save');
@@ -103,6 +86,8 @@ editor.on('ready', function() {
       }));
     }
   }, false);
+});
+*/
 
 
 /*
@@ -124,4 +109,56 @@ editor.watch('root.age',function() {
 });
 
 */
+
+/**
+ *
+ * @param {*} strs
+ * @returns
+ */
+function substringMatcher(strs) {
+  console.log('strs', strs);
+  return function findMatches(q, cb) {
+    console.log('q', q);
+    let matches; let substringRegex;
+
+    // an array that will be populated with substring matches
+    matches = [];
+    console.log('matches', matches);
+
+    // regex used to determine if a string contains the substring `q`
+    substrRegex = new RegExp(q, 'i');
+
+    // iterate through the pool of strings and for any string that
+    // contains the substring `q`, add it to the `matches` array
+    $.each(strs, function(i, str) {
+      if (substrRegex.test(str)) {
+        matches.push(str);
+      }
+    });
+
+    console.log('matches', matches);
+
+    cb(matches);
+  };
+};
+
+let states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
+  'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
+  'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
+  'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
+  'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+  'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
+  'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
+  'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
+  'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming',
+];
+
+$('#the-basics .typeahead').typeahead({
+  hint: true,
+  highlight: true,
+  minLength: 1,
+},
+{
+  name: 'states',
+  source: substringMatcher(states),
 });
