@@ -34,7 +34,7 @@ const editor = new JSONEditor(form, options);
 
 editor.on('ready', function() {
 
-}
+});
 /*
 editor.on('ready', function() {
 
@@ -113,20 +113,15 @@ editor.watch('root.age',function() {
 /**
  *
  * @param {*} strs
- * @returns
+ * @returns {*}
  */
 function substringMatcher(strs) {
   console.log('strs', strs);
   return function findMatches(q, cb) {
     console.log('q', q);
-    let matches; let substringRegex;
-
-    // an array that will be populated with substring matches
-    matches = [];
-    console.log('matches', matches);
-
+    let matches = [];
     // regex used to determine if a string contains the substring `q`
-    substrRegex = new RegExp(q, 'i');
+    let substrRegex = new RegExp(q, 'i');
 
     // iterate through the pool of strings and for any string that
     // contains the substring `q`, add it to the `matches` array
