@@ -3,6 +3,7 @@ import logging
 import os
 
 import click
+import openpyxl
 
 from utils.compiler import DDLCompiler, DotCompiler
 from utils.dot import make_img
@@ -46,6 +47,24 @@ def main(ctx, loglevel, schema_json, output, sql_dialect="mssql"):
         sql = str(DDLCompiler(meta.bind.url).compile_tables(meta))
         with open(output, "w", encoding="utf-8") as file:
             file.write(sql)
+    elif suffix == "xlsx":
+        wb = openpyxl.Workbook()
+        for sname in wb.sheetnames:
+            del wb[sname]
+        for resource in json_data["resources"]:
+            sht = wb.create_sheet(resource["name"])
+            sht.cell(1, 1).value = "column_name"
+            sht.cell(1, 2).value = "type"
+            sht.cell(1, 3).value = "nullable"
+            sht.cell(1, 4).value = "description"
+            for i, field in enumerate(resource["schema"]["fields"]):
+                sht.cell(i + 2, 1).value = field["name"]
+                sht.cell(i + 2, 2).value = field["type"]
+                sht.cell(i + 2, 3).value = (
+                    "NULL" if field.get("nullable", True) else "NOT NULL"
+                )
+                sht.cell(i + 2, 4).value = field.get("description")
+        wb.save(output)
     else:
         raise NotImplementedError(suffix)
 
