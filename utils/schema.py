@@ -6,6 +6,7 @@ import re
 import jsonref
 from sqlalchemy import (
     Column,
+    ForeignKey,
     ForeignKeyConstraint,
     MetaData,
     PrimaryKeyConstraint,
@@ -41,12 +42,13 @@ def get_attr(data, name, default=None):
 
 
 def get_column(data, dialect=None):
-    name = data["name"]
-    description = get_attr(data, "description")
-    nullable = get_attr(data, "nullable", False)
-    coltype = parse_type(data["type"], dialect=dialect)
-    data = {}  # todo: allowed args?
-    col = Column(name, coltype, comment=description, nullable=nullable, **data)
+    args = []
+    kwargs = {}
+    args.append(data["name"])
+    args.append(parse_type(data["type"], dialect=dialect))
+    kwargs["comment"] = get_attr(data, "description")
+    kwargs["nullable"] = get_attr(data, "nullable", True)
+    col = Column(*args, **kwargs)
     return col
 
 
@@ -71,13 +73,29 @@ def get_uq(data):
     return UniqueConstraint(*fields, name=name)
 
 
-def get_fk(data, meta):
+def get_fk(data):
     name = get_attr(data, "name")
     fields = make_field_list(data)
     reference = data["reference"]
-    ref_tab = meta.tables[reference["resource"]]
-    refcolumns = [ref_tab.c[c] for c in make_field_list(reference, default=fields)]
+    if isinstance(reference, str):
+        reference = {"resource": reference}
+    ref_tab = reference["resource"]
+    refcolumns = [f"{ref_tab}.{c}" for c in make_field_list(reference, default=fields)]
+
     return ForeignKeyConstraint(fields, refcolumns=refcolumns, name=name)
+
+
+def get_field_constraints(field):
+    constraints = []
+    if field.get("primaryKey"):
+        constraints.append(get_pk(field["name"]))
+    if field.get("uniqueKey"):
+        constraints.append(get_uq(field["name"]))
+    if field.get("foreignKey"):
+        data = field["foreignKey"].copy()
+        data["fields"] = field["name"]
+        constraints.append(get_fk(data))
+    return constraints
 
 
 def get_tab(data, meta):
@@ -87,12 +105,15 @@ def get_tab(data, meta):
     table_schema = data["schema"]
     columns = [get_column(c, dialect=dialect) for c in table_schema["fields"]]
     constraints = []
+    # add constraints from columns
+    for c in table_schema["fields"]:
+        constraints += get_field_constraints(c)
     if table_schema.get("primaryKey"):
         constraints.append(get_pk(table_schema["primaryKey"]))
     for d in table_schema.get("uniqueKeys", []):
         constraints.append(get_uq(d))
     for d in table_schema.get("foreignKeys", []):
-        constraints.append(get_fk(d, meta))
+        constraints.append(get_fk(d))
     tab = Table(name, meta, *columns, *constraints, comment=description)
     return tab
 
