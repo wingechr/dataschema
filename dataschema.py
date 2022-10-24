@@ -18,22 +18,26 @@ from utils.schema import get_json_data, get_meta
     type=click.Choice(["debug", "info", "warning", "error"]),
     default="info",
 )
-@click.argument("schema-json")
+@click.argument("schema-jsons", nargs=-1)
 @click.argument("output")
 @click.option("--sql-dialect", "-d", default="mssql")
-def main(ctx, loglevel, schema_json, output, sql_dialect="mssql"):
+def main(ctx, loglevel, schema_jsons, output, sql_dialect="mssql"):
     """Script entry point."""
     if isinstance(loglevel, str):  # e.g. 'debug'/'DEBUG' -> logging.DEBUG
         loglevel = getattr(logging, loglevel.upper())
     ctx.ensure_object(dict)
 
-    schema_json = os.path.abspath(schema_json)
     output = os.path.abspath(output)
-    assert output != schema_json
     os.makedirs(os.path.dirname(output), exist_ok=True)
     suffix = output.split(".")[-1]
 
-    json_data = get_json_data(schema_json)
+    json_data = {"resources": []}
+    for schema_json in schema_jsons:
+        schema_json = os.path.abspath(schema_json)
+        assert output != schema_json
+        _json_data = get_json_data(schema_json)
+        json_data["resources"] += _json_data["resources"]
+
     if suffix == "json":
         with open(output, "w", encoding="utf-8") as file:
             json.dump(json_data, file, indent=2, ensure_ascii=False)

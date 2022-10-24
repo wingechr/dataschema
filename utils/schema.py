@@ -6,7 +6,6 @@ import re
 import jsonref
 from sqlalchemy import (
     Column,
-    ForeignKey,
     ForeignKeyConstraint,
     MetaData,
     PrimaryKeyConstraint,
@@ -41,10 +40,23 @@ def get_attr(data, name, default=None):
     return data.get(name, default)
 
 
+def context_exception(fun):
+    def fun_(*args, **kwargs):
+        try:
+            return fun(*args, **kwargs)
+        except Exception as exc:
+            raise Exception(exc, args, kwargs)
+
+    return fun_
+
+
+@context_exception
 def get_column(data, dialect=None):
     args = []
     kwargs = {}
-    args.append(data["name"])
+    name = data["name"]
+    name = validate_name(name)
+    args.append(name)
     args.append(parse_type(data["type"], dialect=dialect))
     kwargs["comment"] = get_attr(data, "description")
     kwargs["nullable"] = get_attr(data, "nullable", True)
@@ -98,9 +110,17 @@ def get_field_constraints(field):
     return constraints
 
 
+def validate_name(name):
+    if not re.match("^[a-z][a-z0-9_]{2,63}$", name):
+        logging.warning(f"invalid name: {name}")
+    return name
+
+
 def get_tab(data, meta):
     dialect = meta.bind.dialect
     name = data["name"]
+    name = validate_name(name)
+    schema_name = data.get("schemaName")
     description = get_attr(data, "description")
     table_schema = data["schema"]
     columns = [get_column(c, dialect=dialect) for c in table_schema["fields"]]
@@ -114,7 +134,9 @@ def get_tab(data, meta):
         constraints.append(get_uq(d))
     for d in table_schema.get("foreignKeys", []):
         constraints.append(get_fk(d))
-    tab = Table(name, meta, *columns, *constraints, comment=description)
+    tab = Table(
+        name, meta, *columns, *constraints, comment=description, schema=schema_name
+    )
     return tab
 
 

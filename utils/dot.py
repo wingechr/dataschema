@@ -4,7 +4,7 @@ from os import remove
 from shutil import which
 from tempfile import mktemp
 
-from utils.code import Code
+from .code import Code
 
 
 def _get_dot() -> str:

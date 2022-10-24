@@ -2,7 +2,7 @@ import logging  # noqa
 
 from sqlalchemy import ForeignKeyConstraint, create_mock_engine
 
-from utils.dot import Digraph, Edge, Node
+from .dot import Digraph, Edge, Node, Subgraph
 
 
 class Compiler:
@@ -48,25 +48,34 @@ def _get_col_index(col):
 
 class DotCompiler(Compiler):
     def __init__(self):
+        self.graph = Digraph(
+            graph_attrs={
+                "rankdir": "RL",
+                "ranksep": 3,
+                # "splines": "line"
+            },
+            edge_attrs={
+                "arrowhead": "vee",
+            },
+        )
         super().__init__(
             url="sqlite://",
-            init_data=Digraph(
-                graph_attrs={
-                    "rankdir": "RL",
-                    "ranksep": 3,
-                    # "splines": "line"
-                },
-                edge_attrs={
-                    "arrowhead": "vee",
-                },
-            ),
+            init_data=self.graph,
         )
+        self.clusters = {}
+
+    def get_cluster(self, name):
+        name = name or "main"
+        if name not in self.clusters:
+            self.clusters[name] = self.graph.append(Subgraph(name))
+        return self.clusters[name]
 
     def compile_table(self, create_stmt):
         table = create_stmt.element
         name = table.name
+        cluster = self.get_cluster(table.schema)
         label = self.get_html_table_label(table)
-        table_node = self.data.append(Node(name, {"label": label, "shape": "box"}))
+        table_node = cluster.append(Node(name, {"label": label, "shape": "box"}))
 
         for const in table.constraints:
             if isinstance(const, ForeignKeyConstraint):
@@ -74,7 +83,7 @@ class DotCompiler(Compiler):
                 for refcol in const.elements:
                     idx1 = _get_col_index(refcol.parent)
                     idx2 = _get_col_index(refcol.column)
-                    self.data.append(
+                    cluster.append(
                         Edge(table_node, ref_table.name, anchor1=idx1, anchor2=idx2)
                     )
 
