@@ -150,6 +150,25 @@ def get_meta(schema_json_data, url):
     return meta
 
 
+def update_dereferenced_data(data, data_orig):
+    """update dereferenced objects with additional data"""
+
+    if isinstance(data_orig, dict):
+        if "$ref" in data_orig:
+            data_orig.pop("$ref")
+            if data_orig:
+                data.update(data_orig)
+        else:
+            assert set(data_orig) == set(data)
+            for k in data_orig:
+                update_dereferenced_data(data[k], data_orig[k])
+    elif isinstance(data_orig, list):
+        assert len(data_orig) == len(data)
+        for d, d_o in zip(data, data_orig):
+            update_dereferenced_data(d, d_o)
+    return
+
+
 def get_json_data(schema_json):
 
     base_dir = os.path.dirname(schema_json)
@@ -161,5 +180,10 @@ def get_json_data(schema_json):
 
     with open(schema_json, encoding="utf-8") as file:
         data = jsonref.load(file, loader=loader)
+
+    with open(schema_json, encoding="utf-8") as file:
+        data_orig = json.load(file)
+
+    update_dereferenced_data(data, data_orig)
 
     return data
