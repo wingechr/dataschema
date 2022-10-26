@@ -2,6 +2,7 @@ import json
 import logging  # noqa
 import os
 import re
+from io import StringIO
 
 import jsonref
 from sqlalchemy import (
@@ -180,6 +181,12 @@ def get_json_data(schema_json):
 
     with open(schema_json, encoding="utf-8") as file:
         data = jsonref.load(file, loader=loader)
+
+    # fully deref
+    buf = StringIO()
+    json.dump(data, buf)
+    buf.seek(0)
+    data = json.load(buf)
 
     with open(schema_json, encoding="utf-8") as file:
         data_orig = json.load(file)
