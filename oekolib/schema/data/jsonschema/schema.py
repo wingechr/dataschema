@@ -4,7 +4,7 @@ We want to
     * deref them into single files
 
 Example:
-    assert_url_local("http://json-schema.org/draft-07/schema")
+    assert_url_local("http://swagger.io/v2/schema.json")
 
 """
 
@@ -82,3 +82,8 @@ def load(local_path, url, base_url=None):
             file.write(schema_str)
     with open(local_path, "r", encoding=ENCODING) as file:
         return json.load(file)
+
+
+if __name__ == "__main__":
+    assert_url_local("http://swagger.io/v2/schema.json")  # open api 2.0
+    assert_url_local("https://spec.openapis.org/oas/3.0/schema/2021-09-28")
