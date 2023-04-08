@@ -1,39 +1,28 @@
 {
-  "$comment": "This meta-schema also defines keywords that have appeared in previous drafts in order to prevent incompatible extensions as they remain in common use.",
-  "$dynamicAnchor": "meta",
-  "$id": "https://json-schema.org/draft/2020-12/schema",
-  "$schema": "http://json-schema.org/draft-07/schema",
-  "$defs": {
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://json-schema.org/draft-07/schema#",
+  "title": "Core schema meta-schema",
+  "definitions": {
     "schemaArray": {
-      "items": {
-        "$dynamicRef": "#meta"
-      },
+      "type": "array",
       "minItems": 1,
-      "type": "array"
+      "items": {
+        "$ref": "#"
+      }
     },
-    "anchorString": {
-      "pattern": "^[A-Za-z_][-A-Za-z0-9._]*$",
-      "type": "string"
-    },
-    "uriReferenceString": {
-      "format": "uri-reference",
-      "type": "string"
-    },
-    "uriString": {
-      "format": "uri",
-      "type": "string"
-    },
-    "additionalProperties": {
-      "$dynamicRef": "#meta"
-    },
-    "type": "object",
     "nonNegativeInteger": {
-      "minimum": 0,
-      "type": "integer"
+      "type": "integer",
+      "minimum": 0
     },
     "nonNegativeIntegerDefault0": {
-      "$ref": "#/$defs/nonNegativeInteger",
-      "default": 0
+      "allOf": [
+        {
+          "$ref": "#/definitions/nonNegativeInteger"
+        },
+        {
+          "default": 0
+        }
+      ]
     },
     "simpleTypes": {
       "enum": [
@@ -47,517 +36,207 @@
       ]
     },
     "stringArray": {
-      "default": [],
+      "type": "array",
       "items": {
         "type": "string"
       },
-      "type": "array",
-      "uniqueItems": true
+      "uniqueItems": true,
+      "default": []
     }
   },
-  "allOf": [
-    {
-      "$dynamicAnchor": "meta",
-      "$id": "https://json-schema.org/draft/2020-12/meta/core",
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$vocabulary": {
-        "https://json-schema.org/draft/2020-12/vocab/core": true
-      },
-      "properties": {
-        "$anchor": {
-          "$ref": "#/$defs/anchorString"
-        },
-        "$comment": {
-          "type": "string"
-        },
-        "$dynamicAnchor": {
-          "$ref": "#/$defs/anchorString"
-        },
-        "$dynamicRef": {
-          "$ref": "#/$defs/uriReferenceString"
-        },
-        "$id": {
-          "$comment": "Non-empty fragments not allowed.",
-          "$ref": "#/$defs/uriReferenceString",
-          "pattern": "^[^#]*#?$"
-        },
-        "$ref": {
-          "$ref": "#/$defs/uriReferenceString"
-        },
-        "$schema": {
-          "$ref": "#/$defs/uriString"
-        },
-        "$vocabulary": {
-          "additionalProperties": {
-            "type": "boolean"
-          },
-          "propertyNames": {
-            "$ref": "#/$defs/uriString"
-          },
-          "type": "object"
-        }
-      },
-      "title": "Core vocabulary meta-schema",
-      "type": ["object", "boolean"]
-    },
-    {
-      "$dynamicAnchor": "meta",
-      "$id": "https://json-schema.org/draft/2020-12/meta/applicator",
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$vocabulary": {
-        "https://json-schema.org/draft/2020-12/vocab/applicator": true
-      },
-      "properties": {
-        "additionalProperties": {
-          "$dynamicRef": "#meta"
-        },
-        "allOf": {
-          "$ref": "#/$defs/schemaArray"
-        },
-        "anyOf": {
-          "$ref": "#/$defs/schemaArray"
-        },
-        "contains": {
-          "$dynamicRef": "#meta"
-        },
-        "dependentSchemas": {
-          "additionalProperties": {
-            "$dynamicRef": "#meta"
-          },
-          "default": {},
-          "type": "object"
-        },
-        "else": {
-          "$dynamicRef": "#meta"
-        },
-        "if": {
-          "$dynamicRef": "#meta"
-        },
-        "items": {
-          "$dynamicRef": "#meta"
-        },
-        "not": {
-          "$dynamicRef": "#meta"
-        },
-        "oneOf": {
-          "$ref": "#/$defs/schemaArray"
-        },
-        "patternProperties": {
-          "additionalProperties": {
-            "$dynamicRef": "#meta"
-          },
-          "default": {},
-          "propertyNames": {
-            "format": "regex"
-          },
-          "type": "object"
-        },
-        "prefixItems": {
-          "$ref": "#/$defs/schemaArray"
-        },
-        "properties": {
-          "additionalProperties": {
-            "$dynamicRef": "#meta"
-          },
-          "default": {},
-          "type": "object"
-        },
-        "propertyNames": {
-          "$dynamicRef": "#meta"
-        },
-        "then": {
-          "$dynamicRef": "#meta"
-        }
-      },
-      "title": "Applicator vocabulary meta-schema",
-      "type": ["object", "boolean"]
-    },
-    {
-      "$dynamicAnchor": "meta",
-      "$id": "https://json-schema.org/draft/2020-12/meta/unevaluated",
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$vocabulary": {
-        "https://json-schema.org/draft/2020-12/vocab/unevaluated": true
-      },
-      "properties": {
-        "unevaluatedItems": {
-          "$dynamicRef": "#meta"
-        },
-        "unevaluatedProperties": {
-          "$dynamicRef": "#meta"
-        }
-      },
-      "title": "Unevaluated applicator vocabulary meta-schema",
-      "type": ["object", "boolean"]
-    },
-    {
-      "$dynamicAnchor": "meta",
-      "$id": "https://json-schema.org/draft/2020-12/meta/validation",
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$vocabulary": {
-        "https://json-schema.org/draft/2020-12/vocab/validation": true
-      },
-      "properties": {
-        "const": true,
-        "dependentRequired": {
-          "additionalProperties": {
-            "$ref": "#/$defs/stringArray"
-          },
-          "type": "object"
-        },
-        "enum": {
-          "items": true,
-          "type": "array"
-        },
-        "exclusiveMaximum": {
-          "type": "number"
-        },
-        "exclusiveMinimum": {
-          "type": "number"
-        },
-        "maxContains": {
-          "$ref": "#/$defs/nonNegativeInteger"
-        },
-        "maxItems": {
-          "$ref": "#/$defs/nonNegativeInteger"
-        },
-        "maxLength": {
-          "$ref": "#/$defs/nonNegativeInteger"
-        },
-        "maxProperties": {
-          "$ref": "#/$defs/nonNegativeInteger"
-        },
-        "maximum": {
-          "type": "number"
-        },
-        "minContains": {
-          "$ref": "#/$defs/nonNegativeInteger",
-          "default": 1
-        },
-        "minItems": {
-          "$ref": "#/$defs/nonNegativeIntegerDefault0"
-        },
-        "minLength": {
-          "$ref": "#/$defs/nonNegativeIntegerDefault0"
-        },
-        "minProperties": {
-          "$ref": "#/$defs/nonNegativeIntegerDefault0"
-        },
-        "minimum": {
-          "type": "number"
-        },
-        "multipleOf": {
-          "exclusiveMinimum": 0,
-          "type": "number"
-        },
-        "pattern": {
-          "format": "regex",
-          "type": "string"
-        },
-        "required": {
-          "$ref": "#/$defs/stringArray"
-        },
-        "type": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/simpleTypes"
-            },
-            {
-              "items": {
-                "$ref": "#/$defs/simpleTypes"
-              },
-              "minItems": 1,
-              "type": "array",
-              "uniqueItems": true
-            }
-          ]
-        },
-        "uniqueItems": {
-          "default": false,
-          "type": "boolean"
-        }
-      },
-      "title": "Validation vocabulary meta-schema",
-      "type": ["object", "boolean"]
-    },
-    {
-      "$dynamicAnchor": "meta",
-      "$id": "https://json-schema.org/draft/2020-12/meta/meta-data",
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$vocabulary": {
-        "https://json-schema.org/draft/2020-12/vocab/meta-data": true
-      },
-      "properties": {
-        "default": true,
-        "deprecated": {
-          "default": false,
-          "type": "boolean"
-        },
-        "description": {
-          "type": "string"
-        },
-        "examples": {
-          "items": true,
-          "type": "array"
-        },
-        "readOnly": {
-          "default": false,
-          "type": "boolean"
-        },
-        "title": {
-          "type": "string"
-        },
-        "writeOnly": {
-          "default": false,
-          "type": "boolean"
-        }
-      },
-      "title": "Meta-data vocabulary meta-schema",
-      "type": ["object", "boolean"]
-    },
-    {
-      "$dynamicAnchor": "meta",
-      "$id": "https://json-schema.org/draft/2020-12/meta/format-annotation",
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$vocabulary": {
-        "https://json-schema.org/draft/2020-12/vocab/format-annotation": true
-      },
-      "properties": {
-        "format": {
-          "type": "string"
-        }
-      },
-      "title": "Format vocabulary meta-schema for annotation results",
-      "type": ["object", "boolean"]
-    },
-    {
-      "$dynamicAnchor": "meta",
-      "$id": "https://json-schema.org/draft/2020-12/meta/content",
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$vocabulary": {
-        "https://json-schema.org/draft/2020-12/vocab/content": true
-      },
-      "properties": {
-        "contentEncoding": {
-          "type": "string"
-        },
-        "contentMediaType": {
-          "type": "string"
-        },
-        "contentSchema": {
-          "$dynamicRef": "#meta"
-        }
-      },
-      "title": "Content vocabulary meta-schema",
-      "type": ["object", "boolean"]
-    }
-  ],
+  "type": ["object", "boolean"],
   "properties": {
-    "$recursiveAnchor": {
-      "$comment": "\"$recursiveAnchor\" has been replaced by \"$dynamicAnchor\".",
-      "$dynamicAnchor": "meta",
-      "$id": "https://json-schema.org/draft/2020-12/meta/core",
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$vocabulary": {
-        "https://json-schema.org/draft/2020-12/vocab/core": true
-      },
-      "deprecated": true,
-      "properties": {
-        "$anchor": {
-          "$ref": "#/$defs/anchorString"
-        },
-        "$comment": {
-          "type": "string"
-        },
-        "$dynamicAnchor": {
-          "$ref": "#/$defs/anchorString"
-        },
-        "$dynamicRef": {
-          "$ref": "#/$defs/uriReferenceString"
-        },
-        "$id": {
-          "$comment": "Non-empty fragments not allowed.",
-          "$ref": "#/$defs/uriReferenceString",
-          "pattern": "^[^#]*#?$"
-        },
-        "$ref": {
-          "$ref": "#/$defs/uriReferenceString"
-        },
-        "$schema": {
-          "$ref": "#/$defs/uriString"
-        },
-        "$vocabulary": {
-          "additionalProperties": {
-            "type": "boolean"
-          },
-          "propertyNames": {
-            "$ref": "#/$defs/uriString"
-          },
-          "type": "object"
-        }
-      },
-      "title": "Core vocabulary meta-schema",
-      "type": ["object", "boolean"]
+    "$id": {
+      "type": "string",
+      "format": "uri-reference"
     },
-    "$recursiveRef": {
-      "$comment": "\"$recursiveRef\" has been replaced by \"$dynamicRef\".",
-      "$dynamicAnchor": "meta",
-      "$id": "https://json-schema.org/draft/2020-12/meta/core",
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$vocabulary": {
-        "https://json-schema.org/draft/2020-12/vocab/core": true
-      },
-      "deprecated": true,
-      "properties": {
-        "$anchor": {
-          "$ref": "#/$defs/anchorString"
+    "$schema": {
+      "type": "string",
+      "format": "uri"
+    },
+    "$ref": {
+      "type": "string",
+      "format": "uri-reference"
+    },
+    "$comment": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "default": true,
+    "readOnly": {
+      "type": "boolean",
+      "default": false
+    },
+    "writeOnly": {
+      "type": "boolean",
+      "default": false
+    },
+    "examples": {
+      "type": "array",
+      "items": true
+    },
+    "multipleOf": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "maximum": {
+      "type": "number"
+    },
+    "exclusiveMaximum": {
+      "type": "number"
+    },
+    "minimum": {
+      "type": "number"
+    },
+    "exclusiveMinimum": {
+      "type": "number"
+    },
+    "maxLength": {
+      "$ref": "#/definitions/nonNegativeInteger"
+    },
+    "minLength": {
+      "$ref": "#/definitions/nonNegativeIntegerDefault0"
+    },
+    "pattern": {
+      "type": "string",
+      "format": "regex"
+    },
+    "additionalItems": {
+      "$ref": "#"
+    },
+    "items": {
+      "anyOf": [
+        {
+          "$ref": "#"
         },
-        "$comment": {
-          "type": "string"
-        },
-        "$dynamicAnchor": {
-          "$ref": "#/$defs/anchorString"
-        },
-        "$dynamicRef": {
-          "$ref": "#/$defs/uriReferenceString"
-        },
-        "$id": {
-          "$comment": "Non-empty fragments not allowed.",
-          "$ref": "#/$defs/uriReferenceString",
-          "pattern": "^[^#]*#?$"
-        },
-        "$ref": {
-          "$ref": "#/$defs/uriReferenceString"
-        },
-        "$schema": {
-          "$ref": "#/$defs/uriString"
-        },
-        "$vocabulary": {
-          "additionalProperties": {
-            "type": "boolean"
-          },
-          "propertyNames": {
-            "$ref": "#/$defs/uriString"
-          },
-          "type": "object"
+        {
+          "$ref": "#/definitions/schemaArray"
         }
-      },
-      "title": "Core vocabulary meta-schema",
-      "type": ["object", "boolean"]
+      ],
+      "default": true
+    },
+    "maxItems": {
+      "$ref": "#/definitions/nonNegativeInteger"
+    },
+    "minItems": {
+      "$ref": "#/definitions/nonNegativeIntegerDefault0"
+    },
+    "uniqueItems": {
+      "type": "boolean",
+      "default": false
+    },
+    "contains": {
+      "$ref": "#"
+    },
+    "maxProperties": {
+      "$ref": "#/definitions/nonNegativeInteger"
+    },
+    "minProperties": {
+      "$ref": "#/definitions/nonNegativeIntegerDefault0"
+    },
+    "required": {
+      "$ref": "#/definitions/stringArray"
+    },
+    "additionalProperties": {
+      "$ref": "#"
     },
     "definitions": {
-      "$comment": "\"definitions\" has been replaced by \"$defs\".",
+      "type": "object",
       "additionalProperties": {
-        "$dynamicRef": "#meta"
+        "$ref": "#"
       },
-      "default": {},
-      "deprecated": true,
-      "type": "object"
+      "default": {}
+    },
+    "properties": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#"
+      },
+      "default": {}
+    },
+    "patternProperties": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#"
+      },
+      "propertyNames": {
+        "format": "regex"
+      },
+      "default": {}
     },
     "dependencies": {
-      "$comment": "\"dependencies\" has been split and replaced by \"dependentSchemas\" and \"dependentRequired\" in order to serve their differing semantics.",
+      "type": "object",
       "additionalProperties": {
         "anyOf": [
           {
-            "$dynamicRef": "#meta"
+            "$ref": "#"
           },
           {
-            "$dynamicAnchor": "meta",
-            "$id": "https://json-schema.org/draft/2020-12/meta/validation",
-            "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$vocabulary": {
-              "https://json-schema.org/draft/2020-12/vocab/validation": true
-            },
-            "properties": {
-              "const": true,
-              "dependentRequired": {
-                "additionalProperties": {
-                  "$ref": "#/$defs/stringArray"
-                },
-                "type": "object"
-              },
-              "enum": {
-                "items": true,
-                "type": "array"
-              },
-              "exclusiveMaximum": {
-                "type": "number"
-              },
-              "exclusiveMinimum": {
-                "type": "number"
-              },
-              "maxContains": {
-                "$ref": "#/$defs/nonNegativeInteger"
-              },
-              "maxItems": {
-                "$ref": "#/$defs/nonNegativeInteger"
-              },
-              "maxLength": {
-                "$ref": "#/$defs/nonNegativeInteger"
-              },
-              "maxProperties": {
-                "$ref": "#/$defs/nonNegativeInteger"
-              },
-              "maximum": {
-                "type": "number"
-              },
-              "minContains": {
-                "$ref": "#/$defs/nonNegativeInteger",
-                "default": 1
-              },
-              "minItems": {
-                "$ref": "#/$defs/nonNegativeIntegerDefault0"
-              },
-              "minLength": {
-                "$ref": "#/$defs/nonNegativeIntegerDefault0"
-              },
-              "minProperties": {
-                "$ref": "#/$defs/nonNegativeIntegerDefault0"
-              },
-              "minimum": {
-                "type": "number"
-              },
-              "multipleOf": {
-                "exclusiveMinimum": 0,
-                "type": "number"
-              },
-              "pattern": {
-                "format": "regex",
-                "type": "string"
-              },
-              "required": {
-                "$ref": "#/$defs/stringArray"
-              },
-              "type": {
-                "anyOf": [
-                  {
-                    "$ref": "#/$defs/simpleTypes"
-                  },
-                  {
-                    "items": {
-                      "$ref": "#/$defs/simpleTypes"
-                    },
-                    "minItems": 1,
-                    "type": "array",
-                    "uniqueItems": true
-                  }
-                ]
-              },
-              "uniqueItems": {
-                "default": false,
-                "type": "boolean"
-              }
-            },
-            "title": "Validation vocabulary meta-schema",
-            "type": ["object", "boolean"]
+            "$ref": "#/definitions/stringArray"
           }
         ]
-      },
-      "default": {},
-      "deprecated": true,
-      "type": "object"
+      }
+    },
+    "propertyNames": {
+      "$ref": "#"
+    },
+    "const": true,
+    "enum": {
+      "type": "array",
+      "items": true,
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "type": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/simpleTypes"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/simpleTypes"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      ]
+    },
+    "format": {
+      "type": "string"
+    },
+    "contentMediaType": {
+      "type": "string"
+    },
+    "contentEncoding": {
+      "type": "string"
+    },
+    "if": {
+      "$ref": "#"
+    },
+    "then": {
+      "$ref": "#"
+    },
+    "else": {
+      "$ref": "#"
+    },
+    "allOf": {
+      "$ref": "#/definitions/schemaArray"
+    },
+    "anyOf": {
+      "$ref": "#/definitions/schemaArray"
+    },
+    "oneOf": {
+      "$ref": "#/definitions/schemaArray"
+    },
+    "not": {
+      "$ref": "#"
     }
   },
-  "title": "Core and Validation specifications meta-schema",
-  "type": ["object", "boolean"]
+  "default": true
 }

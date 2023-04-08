@@ -1212,9 +1212,9 @@
       "unevaluatedProperties": false
     }
   },
-  "$id": "https://spec.openapis.org/oas/3.1/schema/2022-10-07",
+  "$id": "https://spec.openapis.org/oas/3.1/schema/2022-10-07#",
   "$ref": "#/$defs/specification-extensions",
-  "$schema": "http://json-schema.org/draft-07/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "anyOf": [
     {
       "required": ["paths"]

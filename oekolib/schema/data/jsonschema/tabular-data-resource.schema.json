@@ -1,6 +1,6 @@
 {
-  "$id": "https://specs.frictionlessdata.io/schemas/tabular-data-resource.json",
-  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://specs.frictionlessdata.io/schemas/tabular-data-resource.json#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "A Tabular Data Resource.",
   "oneOf": [
     {
