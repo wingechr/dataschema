@@ -1,2 +1,3 @@
-jsonschema
-frictionless
+jsonschema>=4.17
+frictionless>=5.10
+requests>=2.28
