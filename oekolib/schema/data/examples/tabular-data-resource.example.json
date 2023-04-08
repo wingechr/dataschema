@@ -1,7 +1,9 @@
 {
-  "$schema": "http://ek-gitlab.oeko.local/c.winger/oekolib-schema/-/raw/master/oekolib/schema/data/jsonschema/tabular-data-resource.schema.json",
-  "$schemaOnline": "https://specs.frictionlessdata.io/schemas/tabular-data-resource.json",
+  "$schema": "http://ek-gitlab.oeko.local/c.winger/oekolib-schema/-/raw/master/oekolib/schema/data/jsonschema/tabular-data-resource.schema.json#",
+  "$schemaOnline": "https://specs.frictionlessdata.io/schemas/tabular-data-resource.json#",
+  "$id": "myid",
   "name": "example",
+  "profile": "tabular-data-resource",
   "data": [],
   "schema": {
     "fields": [
