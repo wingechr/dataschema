@@ -2,7 +2,7 @@
   "$comment": "This meta-schema also defines keywords that have appeared in previous drafts in order to prevent incompatible extensions as they remain in common use.",
   "$dynamicAnchor": "meta",
   "$id": "https://json-schema.org/draft/2020-12/schema",
-  "$schema": "https://json-schema.org/draft-07/schema",
+  "$schema": "http://json-schema.org/draft-07/schema",
   "$defs": {
     "schemaArray": {
       "items": {
