@@ -1,5 +1,5 @@
 {
-  "$schema": "../schema/tabular-data-resource.schema.json",
+  "$schema": "http://ek-gitlab.oeko.local/c.winger/oekolib-schema/-/raw/master/oekolib/schema/data/jsonschema/tabular-data-resource.schema.json",
   "$schemaOnline": "https://specs.frictionlessdata.io/schemas/tabular-data-resource.json",
   "name": "example",
   "data": [],

@@ -1,5 +1,313 @@
 {
   "$defs": {
+    "type-apikey": {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "apiKey"
+          }
+        },
+        "required": ["type"]
+      },
+      "then": {
+        "properties": {
+          "in": {
+            "enum": ["query", "header", "cookie"]
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": ["name", "in"]
+      }
+    },
+    "type-http": {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "http"
+          }
+        },
+        "required": ["type"]
+      },
+      "then": {
+        "properties": {
+          "scheme": {
+            "type": "string"
+          }
+        },
+        "required": ["scheme"]
+      }
+    },
+    "type-http-bearer": {
+      "if": {
+        "properties": {
+          "scheme": {
+            "pattern": "^[Bb][Ee][Aa][Rr][Ee][Rr]$",
+            "type": "string"
+          },
+          "type": {
+            "const": "http"
+          }
+        },
+        "required": ["type", "scheme"]
+      },
+      "then": {
+        "properties": {
+          "bearerFormat": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "type-oauth2": {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "oauth2"
+          }
+        },
+        "required": ["type"]
+      },
+      "then": {
+        "properties": {
+          "flows": {
+            "$ref": "#/$defs/oauth-flows"
+          }
+        },
+        "required": ["flows"]
+      }
+    },
+    "type-oidc": {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "openIdConnect"
+          }
+        },
+        "required": ["type"]
+      },
+      "then": {
+        "properties": {
+          "openIdConnectUrl": {
+            "format": "uri",
+            "type": "string"
+          }
+        },
+        "required": ["openIdConnectUrl"]
+      }
+    },
+    "styles-for-cookie": {
+      "if": {
+        "properties": {
+          "in": {
+            "const": "cookie"
+          }
+        },
+        "required": ["in"]
+      },
+      "then": {
+        "properties": {
+          "style": {
+            "const": "form",
+            "default": "form"
+          }
+        }
+      }
+    },
+    "styles-for-form": {
+      "else": {
+        "properties": {
+          "explode": {
+            "default": false
+          }
+        }
+      },
+      "if": {
+        "properties": {
+          "style": {
+            "const": "form"
+          }
+        },
+        "required": ["style"]
+      },
+      "then": {
+        "properties": {
+          "explode": {
+            "default": true
+          }
+        }
+      }
+    },
+    "styles-for-header": {
+      "if": {
+        "properties": {
+          "in": {
+            "const": "header"
+          }
+        },
+        "required": ["in"]
+      },
+      "then": {
+        "properties": {
+          "style": {
+            "const": "simple",
+            "default": "simple"
+          }
+        }
+      }
+    },
+    "styles-for-path": {
+      "if": {
+        "properties": {
+          "in": {
+            "const": "path"
+          }
+        },
+        "required": ["in"]
+      },
+      "then": {
+        "properties": {
+          "name": {
+            "pattern": "[^/#?]+$"
+          },
+          "required": {
+            "const": true
+          },
+          "style": {
+            "default": "simple",
+            "enum": ["matrix", "label", "simple"]
+          }
+        },
+        "required": ["required"]
+      }
+    },
+    "styles-for-query": {
+      "if": {
+        "properties": {
+          "in": {
+            "const": "query"
+          }
+        },
+        "required": ["in"]
+      },
+      "then": {
+        "properties": {
+          "allowReserved": {
+            "default": false,
+            "type": "boolean"
+          },
+          "style": {
+            "default": "form",
+            "enum": ["form", "spaceDelimited", "pipeDelimited", "deepObject"]
+          }
+        }
+      }
+    },
+    "authorization-code": {
+      "$ref": "#/$defs/specification-extensions",
+      "properties": {
+        "authorizationUrl": {
+          "format": "uri",
+          "type": "string"
+        },
+        "refreshUrl": {
+          "format": "uri",
+          "type": "string"
+        },
+        "scopes": {
+          "$ref": "#/$defs/map-of-strings"
+        },
+        "tokenUrl": {
+          "format": "uri",
+          "type": "string"
+        }
+      },
+      "required": ["authorizationUrl", "tokenUrl", "scopes"],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "client-credentials": {
+      "$ref": "#/$defs/specification-extensions",
+      "properties": {
+        "refreshUrl": {
+          "format": "uri",
+          "type": "string"
+        },
+        "scopes": {
+          "$ref": "#/$defs/map-of-strings"
+        },
+        "tokenUrl": {
+          "format": "uri",
+          "type": "string"
+        }
+      },
+      "required": ["tokenUrl", "scopes"],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "implicit": {
+      "$ref": "#/$defs/specification-extensions",
+      "properties": {
+        "authorizationUrl": {
+          "format": "uri",
+          "type": "string"
+        },
+        "refreshUrl": {
+          "format": "uri",
+          "type": "string"
+        },
+        "scopes": {
+          "$ref": "#/$defs/map-of-strings"
+        }
+      },
+      "required": ["authorizationUrl", "scopes"],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "password": {
+      "$ref": "#/$defs/specification-extensions",
+      "properties": {
+        "refreshUrl": {
+          "format": "uri",
+          "type": "string"
+        },
+        "scopes": {
+          "$ref": "#/$defs/map-of-strings"
+        },
+        "tokenUrl": {
+          "format": "uri",
+          "type": "string"
+        }
+      },
+      "required": ["tokenUrl", "scopes"],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "explode-default": {
+      "else": {
+        "properties": {
+          "explode": {
+            "default": false
+          }
+        }
+      },
+      "if": {
+        "properties": {
+          "style": {
+            "const": "form"
+          }
+        },
+        "required": ["style"]
+      },
+      "then": {
+        "properties": {
+          "explode": {
+            "default": true
+          }
+        }
+      }
+    },
     "callbacks": {
       "$comment": "https://spec.openapis.org/oas/v3.1.0#callback-object",
       "$ref": "#/$defs/specification-extensions",
@@ -127,32 +435,6 @@
     },
     "encoding": {
       "$comment": "https://spec.openapis.org/oas/v3.1.0#encoding-object",
-      "$defs": {
-        "explode-default": {
-          "else": {
-            "properties": {
-              "explode": {
-                "default": false
-              }
-            }
-          },
-          "if": {
-            "properties": {
-              "style": {
-                "const": "form"
-              }
-            },
-            "required": ["style"]
-          },
-          "then": {
-            "properties": {
-              "explode": {
-                "default": true
-              }
-            }
-          }
-        }
-      },
       "allOf": [
         {
           "$ref": "#/$defs/specification-extensions"
@@ -443,88 +725,6 @@
       "unevaluatedProperties": false
     },
     "oauth-flows": {
-      "$defs": {
-        "authorization-code": {
-          "$ref": "#/$defs/specification-extensions",
-          "properties": {
-            "authorizationUrl": {
-              "format": "uri",
-              "type": "string"
-            },
-            "refreshUrl": {
-              "format": "uri",
-              "type": "string"
-            },
-            "scopes": {
-              "$ref": "#/$defs/map-of-strings"
-            },
-            "tokenUrl": {
-              "format": "uri",
-              "type": "string"
-            }
-          },
-          "required": ["authorizationUrl", "tokenUrl", "scopes"],
-          "type": "object",
-          "unevaluatedProperties": false
-        },
-        "client-credentials": {
-          "$ref": "#/$defs/specification-extensions",
-          "properties": {
-            "refreshUrl": {
-              "format": "uri",
-              "type": "string"
-            },
-            "scopes": {
-              "$ref": "#/$defs/map-of-strings"
-            },
-            "tokenUrl": {
-              "format": "uri",
-              "type": "string"
-            }
-          },
-          "required": ["tokenUrl", "scopes"],
-          "type": "object",
-          "unevaluatedProperties": false
-        },
-        "implicit": {
-          "$ref": "#/$defs/specification-extensions",
-          "properties": {
-            "authorizationUrl": {
-              "format": "uri",
-              "type": "string"
-            },
-            "refreshUrl": {
-              "format": "uri",
-              "type": "string"
-            },
-            "scopes": {
-              "$ref": "#/$defs/map-of-strings"
-            }
-          },
-          "required": ["authorizationUrl", "scopes"],
-          "type": "object",
-          "unevaluatedProperties": false
-        },
-        "password": {
-          "$ref": "#/$defs/specification-extensions",
-          "properties": {
-            "refreshUrl": {
-              "format": "uri",
-              "type": "string"
-            },
-            "scopes": {
-              "$ref": "#/$defs/map-of-strings"
-            },
-            "tokenUrl": {
-              "format": "uri",
-              "type": "string"
-            }
-          },
-          "required": ["tokenUrl", "scopes"],
-          "type": "object",
-          "unevaluatedProperties": false
-        }
-      },
       "$ref": "#/$defs/specification-extensions",
       "properties": {
         "authorizationCode": {
@@ -608,120 +808,6 @@
       "$ref": "#/$defs/specification-extensions",
       "dependentSchemas": {
         "schema": {
-          "$defs": {
-            "styles-for-cookie": {
-              "if": {
-                "properties": {
-                  "in": {
-                    "const": "cookie"
-                  }
-                },
-                "required": ["in"]
-              },
-              "then": {
-                "properties": {
-                  "style": {
-                    "const": "form",
-                    "default": "form"
-                  }
-                }
-              }
-            },
-            "styles-for-form": {
-              "else": {
-                "properties": {
-                  "explode": {
-                    "default": false
-                  }
-                }
-              },
-              "if": {
-                "properties": {
-                  "style": {
-                    "const": "form"
-                  }
-                },
-                "required": ["style"]
-              },
-              "then": {
-                "properties": {
-                  "explode": {
-                    "default": true
-                  }
-                }
-              }
-            },
-            "styles-for-header": {
-              "if": {
-                "properties": {
-                  "in": {
-                    "const": "header"
-                  }
-                },
-                "required": ["in"]
-              },
-              "then": {
-                "properties": {
-                  "style": {
-                    "const": "simple",
-                    "default": "simple"
-                  }
-                }
-              }
-            },
-            "styles-for-path": {
-              "if": {
-                "properties": {
-                  "in": {
-                    "const": "path"
-                  }
-                },
-                "required": ["in"]
-              },
-              "then": {
-                "properties": {
-                  "name": {
-                    "pattern": "[^/#?]+$"
-                  },
-                  "required": {
-                    "const": true
-                  },
-                  "style": {
-                    "default": "simple",
-                    "enum": ["matrix", "label", "simple"]
-                  }
-                },
-                "required": ["required"]
-              }
-            },
-            "styles-for-query": {
-              "if": {
-                "properties": {
-                  "in": {
-                    "const": "query"
-                  }
-                },
-                "required": ["in"]
-              },
-              "then": {
-                "properties": {
-                  "allowReserved": {
-                    "default": false,
-                    "type": "boolean"
-                  },
-                  "style": {
-                    "default": "form",
-                    "enum": [
-                      "form",
-                      "spaceDelimited",
-                      "pipeDelimited",
-                      "deepObject"
-                    ]
-                  }
-                }
-              }
-            }
-          },
           "allOf": [
             {
               "$ref": "#/$defs/examples"
@@ -1013,105 +1099,6 @@
     },
     "security-scheme": {
       "$comment": "https://spec.openapis.org/oas/v3.1.0#security-scheme-object",
-      "$defs": {
-        "type-apikey": {
-          "if": {
-            "properties": {
-              "type": {
-                "const": "apiKey"
-              }
-            },
-            "required": ["type"]
-          },
-          "then": {
-            "properties": {
-              "in": {
-                "enum": ["query", "header", "cookie"]
-              },
-              "name": {
-                "type": "string"
-              }
-            },
-            "required": ["name", "in"]
-          }
-        },
-        "type-http": {
-          "if": {
-            "properties": {
-              "type": {
-                "const": "http"
-              }
-            },
-            "required": ["type"]
-          },
-          "then": {
-            "properties": {
-              "scheme": {
-                "type": "string"
-              }
-            },
-            "required": ["scheme"]
-          }
-        },
-        "type-http-bearer": {
-          "if": {
-            "properties": {
-              "scheme": {
-                "pattern": "^[Bb][Ee][Aa][Rr][Ee][Rr]$",
-                "type": "string"
-              },
-              "type": {
-                "const": "http"
-              }
-            },
-            "required": ["type", "scheme"]
-          },
-          "then": {
-            "properties": {
-              "bearerFormat": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "type-oauth2": {
-          "if": {
-            "properties": {
-              "type": {
-                "const": "oauth2"
-              }
-            },
-            "required": ["type"]
-          },
-          "then": {
-            "properties": {
-              "flows": {
-                "$ref": "#/$defs/oauth-flows"
-              }
-            },
-            "required": ["flows"]
-          }
-        },
-        "type-oidc": {
-          "if": {
-            "properties": {
-              "type": {
-                "const": "openIdConnect"
-              }
-            },
-            "required": ["type"]
-          },
-          "then": {
-            "properties": {
-              "openIdConnectUrl": {
-                "format": "uri",
-                "type": "string"
-              }
-            },
-            "required": ["openIdConnectUrl"]
-          }
-        }
-      },
       "allOf": [
         {
           "$ref": "#/$defs/specification-extensions"
@@ -1227,7 +1214,7 @@
   },
   "$id": "https://spec.openapis.org/oas/3.1/schema/2022-10-07",
   "$ref": "#/$defs/specification-extensions",
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "https://json-schema.org/draft-07/schema",
   "anyOf": [
     {
       "required": ["paths"]

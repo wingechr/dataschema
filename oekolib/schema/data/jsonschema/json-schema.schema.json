@@ -2,32 +2,61 @@
   "$comment": "This meta-schema also defines keywords that have appeared in previous drafts in order to prevent incompatible extensions as they remain in common use.",
   "$dynamicAnchor": "meta",
   "$id": "https://json-schema.org/draft/2020-12/schema",
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$vocabulary": {
-    "https://json-schema.org/draft/2020-12/vocab/applicator": true,
-    "https://json-schema.org/draft/2020-12/vocab/content": true,
-    "https://json-schema.org/draft/2020-12/vocab/core": true,
-    "https://json-schema.org/draft/2020-12/vocab/format-annotation": true,
-    "https://json-schema.org/draft/2020-12/vocab/meta-data": true,
-    "https://json-schema.org/draft/2020-12/vocab/unevaluated": true,
-    "https://json-schema.org/draft/2020-12/vocab/validation": true
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "$defs": {
+    "schemaArray": {
+      "items": {
+        "$dynamicRef": "#meta"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "anchorString": {
+      "pattern": "^[A-Za-z_][-A-Za-z0-9._]*$",
+      "type": "string"
+    },
+    "uriReferenceString": {
+      "format": "uri-reference",
+      "type": "string"
+    },
+    "uriString": {
+      "format": "uri",
+      "type": "string"
+    },
+    "additionalProperties": {
+      "$dynamicRef": "#meta"
+    },
+    "type": "object",
+    "nonNegativeInteger": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "nonNegativeIntegerDefault0": {
+      "$ref": "#/$defs/nonNegativeInteger",
+      "default": 0
+    },
+    "simpleTypes": {
+      "enum": [
+        "array",
+        "boolean",
+        "integer",
+        "null",
+        "number",
+        "object",
+        "string"
+      ]
+    },
+    "stringArray": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    }
   },
   "allOf": [
     {
-      "$defs": {
-        "anchorString": {
-          "pattern": "^[A-Za-z_][-A-Za-z0-9._]*$",
-          "type": "string"
-        },
-        "uriReferenceString": {
-          "format": "uri-reference",
-          "type": "string"
-        },
-        "uriString": {
-          "format": "uri",
-          "type": "string"
-        }
-      },
       "$dynamicAnchor": "meta",
       "$id": "https://json-schema.org/draft/2020-12/meta/core",
       "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -40,12 +69,6 @@
         },
         "$comment": {
           "type": "string"
-        },
-        "$defs": {
-          "additionalProperties": {
-            "$dynamicRef": "#meta"
-          },
-          "type": "object"
         },
         "$dynamicAnchor": {
           "$ref": "#/$defs/anchorString"
@@ -78,15 +101,6 @@
       "type": ["object", "boolean"]
     },
     {
-      "$defs": {
-        "schemaArray": {
-          "items": {
-            "$dynamicRef": "#meta"
-          },
-          "minItems": 1,
-          "type": "array"
-        }
-      },
       "$dynamicAnchor": "meta",
       "$id": "https://json-schema.org/draft/2020-12/meta/applicator",
       "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -177,35 +191,6 @@
       "type": ["object", "boolean"]
     },
     {
-      "$defs": {
-        "nonNegativeInteger": {
-          "minimum": 0,
-          "type": "integer"
-        },
-        "nonNegativeIntegerDefault0": {
-          "$ref": "#/$defs/nonNegativeInteger",
-          "default": 0
-        },
-        "simpleTypes": {
-          "enum": [
-            "array",
-            "boolean",
-            "integer",
-            "null",
-            "number",
-            "object",
-            "string"
-          ]
-        },
-        "stringArray": {
-          "default": [],
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": true
-        }
-      },
       "$dynamicAnchor": "meta",
       "$id": "https://json-schema.org/draft/2020-12/meta/validation",
       "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -370,20 +355,6 @@
   "properties": {
     "$recursiveAnchor": {
       "$comment": "\"$recursiveAnchor\" has been replaced by \"$dynamicAnchor\".",
-      "$defs": {
-        "anchorString": {
-          "pattern": "^[A-Za-z_][-A-Za-z0-9._]*$",
-          "type": "string"
-        },
-        "uriReferenceString": {
-          "format": "uri-reference",
-          "type": "string"
-        },
-        "uriString": {
-          "format": "uri",
-          "type": "string"
-        }
-      },
       "$dynamicAnchor": "meta",
       "$id": "https://json-schema.org/draft/2020-12/meta/core",
       "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -397,12 +368,6 @@
         },
         "$comment": {
           "type": "string"
-        },
-        "$defs": {
-          "additionalProperties": {
-            "$dynamicRef": "#meta"
-          },
-          "type": "object"
         },
         "$dynamicAnchor": {
           "$ref": "#/$defs/anchorString"
@@ -436,20 +401,6 @@
     },
     "$recursiveRef": {
       "$comment": "\"$recursiveRef\" has been replaced by \"$dynamicRef\".",
-      "$defs": {
-        "anchorString": {
-          "pattern": "^[A-Za-z_][-A-Za-z0-9._]*$",
-          "type": "string"
-        },
-        "uriReferenceString": {
-          "format": "uri-reference",
-          "type": "string"
-        },
-        "uriString": {
-          "format": "uri",
-          "type": "string"
-        }
-      },
       "$dynamicAnchor": "meta",
       "$id": "https://json-schema.org/draft/2020-12/meta/core",
       "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -463,12 +414,6 @@
         },
         "$comment": {
           "type": "string"
-        },
-        "$defs": {
-          "additionalProperties": {
-            "$dynamicRef": "#meta"
-          },
-          "type": "object"
         },
         "$dynamicAnchor": {
           "$ref": "#/$defs/anchorString"
@@ -517,35 +462,6 @@
             "$dynamicRef": "#meta"
           },
           {
-            "$defs": {
-              "nonNegativeInteger": {
-                "minimum": 0,
-                "type": "integer"
-              },
-              "nonNegativeIntegerDefault0": {
-                "$ref": "#/$defs/nonNegativeInteger",
-                "default": 0
-              },
-              "simpleTypes": {
-                "enum": [
-                  "array",
-                  "boolean",
-                  "integer",
-                  "null",
-                  "number",
-                  "object",
-                  "string"
-                ]
-              },
-              "stringArray": {
-                "default": [],
-                "items": {
-                  "type": "string"
-                },
-                "type": "array",
-                "uniqueItems": true
-              }
-            },
             "$dynamicAnchor": "meta",
             "$id": "https://json-schema.org/draft/2020-12/meta/validation",
             "$schema": "https://json-schema.org/draft/2020-12/schema",
