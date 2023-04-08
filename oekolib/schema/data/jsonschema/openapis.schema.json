@@ -5,10 +5,16 @@
   "type": "object",
   "properties": {
     "$schema": {
-      "type": "string"
+      "type": "string",
+      "$comment": "added by c.winger"
     },
     "$schemaOnline": {
-      "type": "string"
+      "type": "string",
+      "$comment": "added by c.winger"
+    },
+    "$id": {
+      "type": "string",
+      "$comment": "added by c.winger"
     },
     "openapi": {
       "type": "string",
