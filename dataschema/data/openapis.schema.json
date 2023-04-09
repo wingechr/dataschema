@@ -9,10 +9,6 @@
       "type": "string",
       "$comment": "added by c.winger"
     },
-    "$schemaOnline": {
-      "type": "string",
-      "$comment": "added by c.winger"
-    },
     "$id": {
       "type": "string",
       "$comment": "added by c.winger"

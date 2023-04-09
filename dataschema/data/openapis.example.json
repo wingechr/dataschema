@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/wingechr/dataschema/master/dataschema/data/openapis.schema.json#",
+  "$id": "myid",
+  "openapi": "3.1.0",
+  "paths": {},
+  "info": {
+    "title": "mytitle",
+    "version": "0.0.0"
+  }
+}

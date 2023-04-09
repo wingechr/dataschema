@@ -1,9 +1,0 @@
-{
-  "$schema": "http://ek-gitlab.oeko.local/c.winger/oekolib-schema/-/raw/master/oekolib/schema/data/jsonschema/json-schema.schema.json#",
-  "$schemaOnline": "https://json-schema.org/draft-07/schema#",
-  "$id": "myid",
-  "type": "object",
-  "additionalProperties": false,
-  "required": [],
-  "properties": {}
-}

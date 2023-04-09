@@ -1,3 +1,0 @@
-# README
-
-dereferenced schema files
