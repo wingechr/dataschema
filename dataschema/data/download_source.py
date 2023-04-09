@@ -85,17 +85,14 @@ def load(local_path, url, base_url=None):
 
 
 if __name__ == "__main__":
-    assert_url_local("http://swagger.io/v2/schema.json")  # open api 2.0
-    assert_url_local("https://spec.openapis.org/oas/3.0/schema/2021-09-28")
-    assert_url_local("https://spec.openapis.org/oas/3.1/schema/2022-10-07")
-    assert_url_local("https://json-schema.org/draft/2020-12/schema")
-    assert_url_local("https://json-schema.org/draft-07/schema")
-    assert_url_local(
-        "https://raw.githubusercontent.com/frictionlessdata/specs/master/schemas/tabular-data-package.json"
-    )
-    assert_url_local(
-        "https://specs.frictionlessdata.io/schemas/tabular-data-resource.json"
-    )
-    assert_url_local(
-        "https://specs.frictionlessdata.io/schemas/tabular-data-package.json"
-    )
+    for url in [
+        "http://swagger.io/v2/schema.json",  # open api 2.0
+        "https://spec.openapis.org/oas/3.0/schema/2021-09-28",
+        "https://spec.openapis.org/oas/3.1/schema/2022-10-07",
+        "https://json-schema.org/draft/2020-12/schema",
+        "https://json-schema.org/draft-07/schema",
+        "https://raw.githubusercontent.com/frictionlessdata/specs/master/schemas/tabular-data-package.json",
+        "https://specs.frictionlessdata.io/schemas/tabular-data-resource.json",
+        "https://specs.frictionlessdata.io/schemas/tabular-data-package.json",
+    ]:
+        assert_url_local(url)
