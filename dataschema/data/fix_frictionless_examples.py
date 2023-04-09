@@ -1,11 +1,5 @@
 """
-We want to
-    * cache json schemas locally (because speed and behind proxy)
-    * deref them into single files
-
-Example:
-    assert_url_local("http://swagger.io/v2/schema.json")
-
+fix examples from frictionless schemas
 """
 
 import json
