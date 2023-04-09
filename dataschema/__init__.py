@@ -1,7 +1,13 @@
 __version__ = "0.0.0"
+__appname__ = "dataschema"
 
+import json
 from functools import cache
+from os import makedirs
+from os.path import dirname, isfile, realpath
+from urllib.parse import urlsplit
 
+import appdirs
 import frictionless
 import jsonschema
 import requests
@@ -23,8 +29,30 @@ def validate_resource(resource_descriptor):
 
 
 @cache
-def get_jsonschema(schema_url):
-    return requests.get(schema_url).json()
+def get_cache_dir():
+    return appdirs.user_cache_dir(__appname__, appauthor=None, version=None)
+
+
+@cache
+def get_local_path(url, cache_dir=None):
+    cache_dir = cache_dir or get_cache_dir() + "/schema"
+    url_parts = urlsplit(url)
+    path = cache_dir + "/" + url_parts.netloc + "/" + url_parts.path
+    return realpath(path)
+
+
+@cache
+def get_jsonschema(schema_url, cache_dir=None, encoding="utf-8"):
+    local_path = get_local_path(schema_url, cache_dir=cache_dir)
+    if not isfile(local_path):
+        makedirs(dirname(local_path), exist_ok=True)
+        res = requests.get(schema_url)
+        res.raise_for_status()
+        res = json.dumps(res.json(), indent=4, ensure_ascii=False)
+        with open(local_path, "w", encoding=encoding) as file:
+            file.write(res)
+    with open(local_path, "r", encoding=encoding) as file:
+        return json.load(file)
 
 
 def get_jsonschema_validator(schema):
