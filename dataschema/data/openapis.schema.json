@@ -9,10 +9,6 @@
       "type": "string",
       "$comment": "added by c.winger"
     },
-    "$id": {
-      "type": "string",
-      "$comment": "added by c.winger"
-    },
     "openapi": {
       "type": "string",
       "pattern": "^3\\.0\\.\\d(-.+)?$"

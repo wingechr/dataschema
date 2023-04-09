@@ -1,6 +1,5 @@
 {
   "$schema": "https://raw.githubusercontent.com/wingechr/dataschema/master/dataschema/data/tabular-data-resource.schema.json#",
-  "$id": "myId",
   "name": "example",
   "profile": "tabular-data-resource",
   "data": [],
