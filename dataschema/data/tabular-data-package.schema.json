@@ -266,7 +266,7 @@
               "csvddfVersion": {
                 "default": 1.2,
                 "description": "A number to indicate the schema version of CSV Dialect. Version 1.0 was named CSV Dialect Description Format and used different field names.",
-                "examples:": ["{\n  \"csvddfVersion\": \"1.2\"\n}\n"],
+                "examples:": ["1.2"],
                 "title": "CSV Dialect schema version",
                 "type": "number"
               },
