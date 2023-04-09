@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/wingechr/dataschema/master/dataschema/data/json-schema.schema.json",
-  "$id": "myid",
+  "$id": "myId",
   "type": "object",
   "additionalProperties": false,
   "required": [],
