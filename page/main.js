@@ -3,10 +3,12 @@
 require("bootstrap");
 
 // eslint-disable-next-line max-len
-const defaultSchemaUrl = "https://raw.githubusercontent.com/wingechr/dataschema/master/dataschema/data/tabular-data-package.schema.json";
+// TODO: $refs dont work?
+const defaultSchemaUrl = "https://raw.githubusercontent.com/wingechr/dataschema/master/dataschema/data/tabular-data-resource.schema.json";
 const JSONEditor = require("@json-editor/json-editor").JSONEditor;
 // eslint-disable-next-line no-unused-vars
 let editor;
+
 
 /**
  *
@@ -24,8 +26,21 @@ function getJson(url) {
   });
 }
 
+// update / fix query params
+const urlSearchParams = new URLSearchParams(window.location.search);
+let params = Object.fromEntries(urlSearchParams.entries());
+params = {
+  schema: params.schema || defaultSchemaUrl,
+};
+let url = (
+  window.location.href.split("?")[0] + '?' +
+  Object.keys(params).map((k) => k + "=" + params[k]).join("&")
+);
+history.pushState(undefined, undefined, url);
+console.log(window.location.href);
 
-getJson(defaultSchemaUrl).then(function(schema) {
+// start editor
+getJson(params.schema).then(function(schema) {
   editor = new JSONEditor(
       document.getElementById('editor'),
       {

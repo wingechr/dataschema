@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "npx parcel build --dist-dir dist page/index.html"
+    "build": "npx parcel build --dist-dir dist --public-url . page/index.html"
   },
   "dependencies": {
     "@json-editor/json-editor": "^2.9.1",
