@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "build": "npx parcel build --dist-dir dist page/index.html"
+  },
   "dependencies": {
     "parcel": "^2.8.3"
   }
