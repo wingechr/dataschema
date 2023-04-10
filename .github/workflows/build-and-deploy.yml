@@ -5,6 +5,8 @@ on:
       - master
 permissions:
   contents: write
+  id-token: write
+  pages: write
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
