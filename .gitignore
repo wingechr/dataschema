@@ -36,3 +36,6 @@ temp
 build
 dist
 site
+
+# log files
+*.log
