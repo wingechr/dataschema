@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: npm install
-      - run: npx parcel build --dist-dir dist page\index.html
+      - run: npx parcel build --dist-dir dist page/index.html
       - uses: actions/upload-artifact@v2
         with:
           path: dist
